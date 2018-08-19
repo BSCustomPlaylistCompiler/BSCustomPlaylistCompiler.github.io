@@ -4,6 +4,14 @@ var songsLoaded = 0;
 var songsEnabled = 0;
 var songsDownloaded = 0;
 getPlaylistHTML();
+window.setTimeout(checkRefresh, 15000);
+
+function checkRefresh() {
+	if (document.getElementById('songTable').rows.length == 1) {
+		console.log('reload');
+		location.reload();
+	}
+}
 
 function getURL() {
 	var origurl = decodeURIComponent(new URL(window.location.href).searchParams.get('playlisturl'));
@@ -17,7 +25,7 @@ function getPlaylistHTML() {
 	htmlFile.onreadystatechange = function() {
 		if (htmlFile.readyState === 4) {  // Makes sure the document is ready to parse.
 			if (htmlFile.status === 200) {  // Makes sure it's found the file.
-				allText = htmlFile.responseText;
+				var allText = htmlFile.responseText;
 				getSongs(allText);
 			} else {
 				getPlaylistHTML();
@@ -70,7 +78,7 @@ function getBeatsaverHTML(filtSong, songName, songArtist) {
 	htmlFile.onreadystatechange = function() {
 		if (htmlFile.readyState === 4) {  // Makes sure the document is ready to parse.
 			if (htmlFile.status === 200) {  // Makes sure it's found the file.
-				allText = htmlFile.responseText;
+				var allText = htmlFile.responseText;
 				displaySong(allText, songName, songArtist);
 			} else {
 				getBeatsaverHTML(filtSong, songName, songArtist);
@@ -153,6 +161,15 @@ function updateDownloads() {
 }
 
 function downloadAll() {
+	document.getElementById('btnDownloadAll').disabled = true;
+	for (rowID in document.getElementById('songTable').rows) {
+		if (rowID != 0) {
+			try {
+				document.getElementById('songTable').rows[rowID].cells[2].getElementsByTagName('select')[0].disabled = true;
+			} catch (err) {}
+		}
+	}
+	alert('Download Started - Compiling may take a few minutes...');
 	songsDownloaded = 0;
 	var table = document.getElementById('songTable');
 	for (arrRow in table.rows) {
@@ -180,15 +197,21 @@ function downloadSong(bsSongID) {
 		songsDownloaded += 1;
 		if (songsDownloaded >= songsEnabled) {
 			playlistZip.generateAsync({type:'blob'}).then(function (blob) {
-				alert('Download Started - Compiling may take a few minutes...');
 				saveAs(blob, "BeatSaverPlaylist.zip");
+				document.getElementById('btnDownloadAll').disabled = false;
+				for (rowID in document.getElementById('songTable').rows) {
+					if (rowID != 0) {
+						try {
+							document.getElementById('songTable').rows[rowID].cells[2].getElementsByTagName('select')[0].disabled = false;
+						} catch (err) {}
+					}
+				}
 			}, function (err) {
 				console.log(err);
 			});
 		}
 	};
 	xhr.onerror = function (e) {
-		reject(e);
 		downloadSong(bsSongID);
 	};
 	xhr.send();

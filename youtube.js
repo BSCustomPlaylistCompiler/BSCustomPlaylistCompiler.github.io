@@ -4,10 +4,23 @@ var songsLoaded = 0;
 var songsEnabled = 0;
 var songsDownloaded = 0;
 getPlaylistHTML();
+window.setTimeout(checkRefresh, 15000);
+
+function checkRefresh() {
+	if (document.getElementById('songTable').rows.length == 1) {
+		console.log('reload');
+		location.reload();
+	}
+}
 
 function getURL() {
 	var origurl = decodeURIComponent(new URL(window.location.href).searchParams.get('playlisturl'));
-	playlisturl = origurl;
+	var playlisturl = '';
+	if (origurl.includes('list=')) {
+		playlisturl = 'https://www.youtube.com/playlist?list=' + (new URL(origurl).searchParams.get('list'));
+	} else {
+		playlisturl = origurl;
+	}
 	return playlisturl;
 }
 
@@ -17,8 +30,14 @@ function getPlaylistHTML() {
 	htmlFile.onreadystatechange = function() {
 		if (htmlFile.readyState === 4) {  // Makes sure the document is ready to parse.
 			if (htmlFile.status === 200) {  // Makes sure it's found the file.
-				allText = htmlFile.responseText;
-				getSongs(allText);
+				var allText = htmlFile.responseText;
+				var myText = allText.split('["ytInitialData"] = ')[1].split('\n')[0];
+				myText = myText.slice(0, myText.length - 1)
+				var resourceJSON = JSON.parse(myText);
+				var firstSongID = resourceJSON['contents']['twoColumnBrowseResultsRenderer']['tabs'][0]['tabRenderer']['content']['sectionListRenderer']['contents'][0]['itemSectionRenderer']['contents'][0]['playlistVideoListRenderer']['contents'][0]['playlistVideoRenderer']['videoId'];
+				var playlistID = resourceJSON['responseContext']['serviceTrackingParams'][1]['params'][0]['value'];
+				playlistID = playlistID.slice(2, playlistID.length);
+				getFirstSongHTML('https://www.youtube.com/watch?v=' + firstSongID + '&list=' + playlistID);
 			} else {
 				getPlaylistHTML();
 			}
@@ -27,16 +46,34 @@ function getPlaylistHTML() {
 	htmlFile.send(null);
 }
 
+function getFirstSongHTML(firstSongURL) {
+	var htmlFile = new XMLHttpRequest();
+	htmlFile.open('GET', 'https://cors.io/?' + firstSongURL, true);
+	htmlFile.onreadystatechange = function() {
+		if (htmlFile.readyState === 4) {  // Makes sure the document is ready to parse.
+			if (htmlFile.status === 200) {  // Makes sure it's found the file.
+				var allText = htmlFile.responseText;
+				getSongs(allText);
+			} else {
+				getFirstSongHTML(firstSongURL);
+			}
+		}
+	}
+	htmlFile.send(null);
+}
+
 function getSongs(sourceHTML) {
-	var doc = (new DOMParser).parseFromString(sourceHTML, 'text/html');
-	var myText = doc.getElementsByTagName('script')[20].innerText;
-	var resourceJSON = JSON.parse(myText.slice(31, myText.length - 121));
-	var songItems = resourceJSON['contents']['twoColumnBrowseResultsRenderer']['tabs'][0]['tabRenderer']['content']['sectionListRenderer']['contents'][0]['itemSectionRenderer']['contents'][0]['playlistVideoListRenderer']['contents'];
+	var myText = sourceHTML.split('["ytInitialData"] = ')[1].split('\n')[0];
+	myText = myText.slice(0, myText.length - 1)
+	var resourceJSON = JSON.parse(myText);
+	var songItems = resourceJSON['contents']['twoColumnWatchNextResults']['playlist']['playlist']['contents'];
 	var songNames = new Array();
 	var songArtists = new Array();
 	for (songItem in songItems) {
-		songNames.push(songItems[songItem]['playlistVideoRenderer']['title']['simpleText']);
-		songArtists.push(songItems[songItem]['playlistVideoRenderer']['title']['simpleText']);
+		try {
+			songNames.push(songItems[songItem]['playlistPanelVideoRenderer']['title']['simpleText']);
+			songArtists.push(songItems[songItem]['playlistPanelVideoRenderer']['title']['simpleText']);
+		} catch (err) {}
 	}
 	for (artist in songArtists) {
 		songArtists[artist] = songArtists[artist].split('-')[0].trim();
@@ -57,10 +94,16 @@ function getSongs(sourceHTML) {
 		if (songNames[song].includes('/')) {
 			songNames[song] = songNames[song].slice(0, songNames[song].indexOf('/'));
 		}
+		if (songNames[song].includes('[')) {
+			songNames[song] = songNames[song].slice(0, songNames[song].indexOf('ft.'));
+		}
+		if (songNames[song].includes('{')) {
+			songNames[song] = songNames[song].slice(0, songNames[song].indexOf('ft.'));
+		}
 		songNames[song] = songNames[song].trim();
 	}
 	for (song in songNames) {
-		var filtSong = songNames[song].toString().toLowerCase().replace(/[^a-z0-9 ]/g, '');
+		var filtSong = songNames[song].toString().toLowerCase().replace(/[^a-z0-9 ]/g, '').trim();
 		getBeatsaverHTML(filtSong, songNames[song], songArtists[song]);
 	}
 }
@@ -71,7 +114,7 @@ function getBeatsaverHTML(filtSong, songName, songArtist) {
 	htmlFile.onreadystatechange = function() {
 		if (htmlFile.readyState === 4) {  // Makes sure the document is ready to parse.
 			if (htmlFile.status === 200) {  // Makes sure it's found the file.
-				allText = htmlFile.responseText;
+				var allText = htmlFile.responseText;
 				displaySong(allText, songName, songArtist);
 			} else {
 				getBeatsaverHTML(filtSong, songName, songArtist);
@@ -154,6 +197,15 @@ function updateDownloads() {
 }
 
 function downloadAll() {
+	document.getElementById('btnDownloadAll').disabled = true;
+	for (rowID in document.getElementById('songTable').rows) {
+		if (rowID != 0) {
+			try {
+				document.getElementById('songTable').rows[rowID].cells[2].getElementsByTagName('select')[0].disabled = true;
+			} catch (err) {}
+		}
+	}
+	alert('Download Started - Compiling may take a few minutes...');
 	songsDownloaded = 0;
 	var table = document.getElementById('songTable');
 	for (arrRow in table.rows) {
@@ -181,15 +233,21 @@ function downloadSong(bsSongID) {
 		songsDownloaded += 1;
 		if (songsDownloaded >= songsEnabled) {
 			playlistZip.generateAsync({type:'blob'}).then(function (blob) {
-				alert('Download Started - Compiling may take a few minutes...');
 				saveAs(blob, "BeatSaverPlaylist.zip");
+				document.getElementById('btnDownloadAll').disabled = false;
+				for (rowID in document.getElementById('songTable').rows) {
+					if (rowID != 0) {
+						try {
+							document.getElementById('songTable').rows[rowID].cells[2].getElementsByTagName('select')[0].disabled = false;
+						} catch (err) {}
+					}
+				}
 			}, function (err) {
 				console.log(err);
 			});
 		}
 	};
 	xhr.onerror = function (e) {
-		reject(e);
 		downloadSong(bsSongID);
 	};
 	xhr.send();
