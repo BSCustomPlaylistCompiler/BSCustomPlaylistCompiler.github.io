@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="Spotify Playlist">
+	<button type="button" name="btnHome" onclick="window.location.href='index.html'" style="float: left; margin-left: 8em; margin-top: 1em;">Home</button>
+	<title>Spotify Playlist</title>
+	<script src="jquery-3.3.1.min.js"></script>
+	<script src="jszip.min.js"></script>
+	<script src="Blob.js"></script>
+	<script src="FileSaver.js"></script>
+	<script type="text/javascript" src="spotify.js"></script>
+	<style>
+		table, th, td {
+			border: 1px solid grey;
+			border-collapse: collapse;
+		}
+		th, td {
+			padding: 5px;
+		}
+	</style>
+</head>
+<body>
+	<h1 style="text-align: center;">Spotify Playlist</h1>
+	<div id="content">
+		<table id ="songTable" style="margin: 1em auto; text-align: left-side; width:90%">
+			<tr>
+				<th>Song</th>
+				<th>Artist</th> 
+				<th>Beatsaver</th>
+				<th>Download</th>
+			</tr>
+		</table>
+		<button type="button" name="btnDownloadAll" onclick="downloadAll()" style="float: right; margin-right: 8em;">Download All</button>
+	</div>
+	<p style="text-align: center;">&nbsp;</p>
+</body>
+</html>
