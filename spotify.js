@@ -52,14 +52,17 @@ function getSongs(sourceHTML) {
 	}
 	for (song in songNames) {
 		var filtSong = songNames[song].toLowerCase();
-		if (filtSong.includes('-')) {
-			filtSong = filtSong.slice(0, filtSong.indexOf('-'));
-		}
 		if (filtSong.includes('feat.')) {
 			filtSong = filtSong.slice(0, filtSong.indexOf('feat.'));
 		}
 		if (filtSong.includes('ft.')) {
 			filtSong = filtSong.slice(0, filtSong.indexOf('ft.'));
+		}
+		if (filtSong.includes(' feat ')) {
+			filtSong = filtSong.slice(0, filtSong.indexOf(' feat '));
+		}
+		if (filtSong.includes(' ft ')) {
+			filtSong = filtSong.slice(0, filtSong.indexOf(' ft '));
 		}
 		if (filtSong.includes('(')) {
 			filtSong = filtSong.slice(0, filtSong.indexOf('('));
