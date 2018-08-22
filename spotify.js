@@ -25,8 +25,7 @@ function checkURL() {
 		getPlaylistHTML();
 	} else if (window.location.href.includes('access_token=')) {
 		document.getElementById('btnSpotifyAuth').style.display = 'none';
-		playlisturl = decodeURIComponent(new URL(window.location.href).searchParams.get('state'));
-		console.log('URL SET TO  ' + playlisturl);
+		playlisturl = decodeURIComponent(new URL(window.location.href.toString().replace(/#/g, '?')).searchParams.get('state'));
 		getAPIJSON(new URL(window.location.href.toString().replace(/#/g, '?')), 0);
 	} else if (window.location.href.includes('error=access_denied')) {
 		document.getElementById('btnSpotifyAuth').style.display = 'none';
