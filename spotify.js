@@ -5,13 +5,23 @@ var songsLoadNum = 0;
 var songsListNum = 0;
 var songsEnabled = 0;
 var songsDownloaded = 0;
-getPlaylistHTML();
+checkURL();
 window.setTimeout(checkRefresh, 15000);
 
 function checkRefresh() {
 	if (document.getElementById('songTable').rows.length == 1) {
 		console.log('reload');
 		location.reload();
+	}
+}
+
+function checkURL() {
+	if (window.location.href.includes('playlisturl='))
+		getPlaylistHTML();
+	} else if (window.location.href.includes('access_token=')) {
+		alert(new URL(window.location.href).searchParams.get('access_token'));
+	} else {
+		alert('No playlist URL was detected');
 	}
 }
 
@@ -22,11 +32,8 @@ function getURL() {
 }
 
 function spotifyLogin() {
-	alert(window.location.href.split('?')[0] + ' - ' + encodeURIComponent(window.location.href.split('?')[0]));
-	alert(encodeURIComponent(new URL(window.location.href).searchParams.get('playlisturl')));
 	window.location.href = 'https://accounts.spotify.com/authorize?client_id=9ada7451c6074f77a81609aacde7efb8&response_type=token&redirect_uri=' + encodeURIComponent(window.location.href.split('?')[0]) + '&state=' + encodeURIComponent(new URL(window.location.href).searchParams.get('playlisturl')) + '&scope=playlist-read-collaborative%20playlist-read-private';
 }
-
 
 function getPlaylistHTML() {
 	var htmlFile = new XMLHttpRequest();
