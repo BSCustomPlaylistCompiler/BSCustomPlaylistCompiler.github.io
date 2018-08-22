@@ -19,10 +19,13 @@ function checkURL() {
 	if (window.location.href.includes('playlisturl=')) {
 		getPlaylistHTML();
 	} else if (window.location.href.includes('access_token=')) {
+		document.getElementById('btnSpotifyAuth').style.display = 'none';
 		getAPIJSON(new URL(window.location.href.toString().replace(/#/g, '?')), 0);
 	} else if (window.location.href.includes('error=access_denied')) {
+		document.getElementById('btnSpotifyAuth').style.display = 'none';
 		alert('Spotify authentication error.');
 	} else {
+		document.getElementById('btnSpotifyAuth').style.display = 'none';
 		alert('No playlist URL was detected');
 	}
 }
@@ -120,8 +123,8 @@ function getSongs(sourceText, loggedIn, offset, myURL) {
 		getBeatsaverHTML(filtSong, songNames[song], songArtists[song]);
 	}
 	if (loggedIn == true && offset == 0 && songsListNum > songsLoadNum) {
-		for (x = 1; x < Math.ceil(songsListNum / 100), x++) {
-			getAPIJSON(myURL, x * 100)
+		for (x = 1; x < Math.ceil(songsListNum / 100); x++) {
+			getAPIJSON(myURL, x * 100);
 		}
 	}
 }
