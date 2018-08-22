@@ -1,6 +1,8 @@
 var playlisturl = '';
 var playlistZip = new JSZip();
 var songsLoaded = 0;
+var songsLoadNum = 0;
+var songsListNum = 0;
 var songsEnabled = 0;
 var songsDownloaded = 0;
 getPlaylistHTML();
@@ -18,6 +20,11 @@ function getURL() {
 	playlisturl = origurl.slice(0, origurl.indexOf('spotify.com/')) + 'spotify.com/embed/' + origurl.slice(origurl.indexOf('spotify.com/') + 12, origurl.length);
 	return playlisturl;
 }
+
+function spotifyLogin() {
+	window.location.href = 'https://accounts.spotify.com/authorize?client_id=9ada7451c6074f77a81609aacde7efb8&response_type=token&redirect_uri=' + window.location.href.split('?')[0] + '&state=' + decodeURIComponent(new URL(window.location.href).searchParams.get('playlisturl')) + 'scope=playlist-read-collaborative%20playlist-read-private';
+}
+
 
 function getPlaylistHTML() {
 	var htmlFile = new XMLHttpRequest();
@@ -38,7 +45,9 @@ function getPlaylistHTML() {
 function getSongs(sourceHTML) {
 	var doc = (new DOMParser).parseFromString(sourceHTML, 'text/html');
 	var resourceJSON = JSON.parse(doc.getElementById('resource').innerText);
+	songsListNum = parseInt(resourceJSON['tracks']['total']);
 	var songItems = resourceJSON['tracks']['items'];
+	songsLoadNum = songItems.length;
 	var songNames = new Array();
 	var songArtists = new Array();
 	for (songItem in songItems) {
@@ -136,6 +145,12 @@ function displaySong(beatsaverHTML, songName, songArtist) {
 	}
 	updateDownloads();
 	songsLoaded += 1;
+	if (songsLoaded == songsLoadNum) {
+		document.getElementById('btnDownloadAll').disabled = false;
+		if (songsLoadNum < songsListNum) {
+			alert('The playlist has only loaded partially. Please login with Spotify to load the full playlist. (This is due to the limitations of the Spotify API)');
+		}
+	}
 }
 	
 function updateDownloads() {
