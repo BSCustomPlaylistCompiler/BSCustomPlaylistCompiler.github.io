@@ -19,8 +19,9 @@ function checkURL() {
 	if (window.location.href.includes('playlisturl=')) {
 		getPlaylistHTML();
 	} else if (window.location.href.includes('access_token=')) {
-		alert(window.location.href.toString().replace(/#/g, '?'));
-		alert(new URL(window.location.href.toString().replace(/#/g, '?')).searchParams.get('access_token'));
+		getAPIJSON(new URL(window.location.href.toString().replace(/#/g, '?')));
+	} else if (window.location.href.includes('error=access_denied')) {
+		alert('Spotify authentication error.');
 	} else {
 		alert('No playlist URL was detected');
 	}
@@ -50,6 +51,24 @@ function getPlaylistHTML() {
 		}
 	}
 	htmlFile.send(null);
+}
+
+function getAPIJSON(myURL) {
+	var myPlaylistID = decodeURIComponent(myURL.searchParams.get('state'));
+	if (myPlaylistID.includes('playlist/')){
+		myPlaylistID = myPlaylistID.split('playlist/')[1];
+	} else if (myPlaylistID.includes('album/')) {
+		myPlaylistID = myPlaylistID.split('album/')[1];
+	}
+	var jsonFile = new XMLHttpRequest();
+	jsonFile.overrideMimeType('application/json');
+	jsonFile.setRequestHeader('Authorization', myURL.searchParams.get('access_token'))
+	jsonFile.open('GET', 'https://api.spotify.com/v1/playlists/' + myPlaylistID + '/tracks', true);
+	jsonFile.onload  = function() {
+		var allText = JSON.parse(req.responseText);
+		console.log(allText);
+	};
+	jsonFile.send(null);
 }
 
 function getSongs(sourceHTML) {
