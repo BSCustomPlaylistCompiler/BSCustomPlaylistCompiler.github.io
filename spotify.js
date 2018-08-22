@@ -56,7 +56,6 @@ function getPlaylistHTML() {
 function getAPIJSON(myURL) {
 	var jsonFile = new XMLHttpRequest();
 	var myPlaylistID = decodeURIComponent(myURL.searchParams.get('state'));
-	console.log(myPlaylistID);
 	jsonFile.overrideMimeType('application/json');
 	var apiURL = ''
 	if (myPlaylistID.includes('playlist/')){
@@ -66,9 +65,9 @@ function getAPIJSON(myURL) {
 	}
 	console.log(apiURL);
 	jsonFile.open('GET', apiURL, true);
-	jsonFile.setRequestHeader('Authorization', myURL.searchParams.get('access_token'));
+	jsonFile.setRequestHeader('Authorization', 'Bearer ' + myURL.searchParams.get('access_token'));
 	jsonFile.onload  = function() {
-		var allText = JSON.parse(req.responseText);
+		var allText = JSON.parse(jsonFile.responseText);
 		console.log(allText);
 	};
 	jsonFile.send(null);
