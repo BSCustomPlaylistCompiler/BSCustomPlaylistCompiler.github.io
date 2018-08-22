@@ -5,8 +5,11 @@ var songsLoadNum = 0;
 var songsListNum = 0;
 var songsEnabled = 0;
 var songsDownloaded = 0;
-checkURL();
-window.setTimeout(checkRefresh, 15000);
+
+window.onload() = function() {
+	checkURL();
+	window.setTimeout(checkRefresh, 15000);
+};
 
 function checkRefresh() {
 	if (document.getElementById('songTable').rows.length == 1) {
