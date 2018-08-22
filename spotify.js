@@ -84,18 +84,14 @@ function getSongs(sourceText, loggedIn, offset, myURL) {
 		var doc = new DOMParser().parseFromString(sourceText, 'text/html');
 		resourceJSON = JSON.parse(doc.getElementById('resource').innerText)['tracks'];
 	}
-	console.log(resourceJSON);
 	songsListNum = parseInt(resourceJSON['total']);
 	var songItems = resourceJSON['items'];
 	songsLoadNum += songItems.length;
 	var songNames = new Array();
 	var songArtists = new Array();
-	console.log(songItems);
-	console.log(playlisturl);
 	for (songItem in songItems) {
 		if (playlisturl.includes('/playlist/')) {
 			songNames.push(songItems[songItem]['track']['name']);
-			console.log(songItems[songItem]['track']['name']);
 			songArtists.push(songItems[songItem]['track']['artists'][0]['name']);
 		} else if (playlisturl.includes('/album/')) {
 			songNames.push(songItems[songItem]['name']);
@@ -133,7 +129,6 @@ function getSongs(sourceText, loggedIn, offset, myURL) {
 }
 
 function getBeatsaverHTML(filtSong, songName, songArtist) {
-	console.log('Searchfor ' + songName);
 	var htmlFile = new XMLHttpRequest();
 	htmlFile.open('GET', 'https://cors.io/?https://www.beatsaver.com/search/all/' + encodeURIComponent(filtSong), true);
 	htmlFile.onreadystatechange = function() {
