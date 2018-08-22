@@ -16,7 +16,7 @@ function checkRefresh() {
 }
 
 function checkURL() {
-	if (window.location.href.includes('playlisturl='))
+	if (window.location.href.includes('playlisturl=')) {
 		getPlaylistHTML();
 	} else if (window.location.href.includes('access_token=')) {
 		alert(window.location.href.toString().replace(/#/g, '?'));
