@@ -71,7 +71,6 @@ function getAPIJSON(myURL, offset) {
 	jsonFile.setRequestHeader('Authorization', 'Bearer ' + myURL.searchParams.get('access_token'));
 	jsonFile.onload  = function() {
 		var allText = jsonFile.responseText;
-		console.log(allText);
 		getSongs(allText, true, offset, myURL);
 	};
 	jsonFile.send(null);
@@ -91,6 +90,8 @@ function getSongs(sourceText, loggedIn, offset, myURL) {
 	songsLoadNum += songItems.length;
 	var songNames = new Array();
 	var songArtists = new Array();
+	console.log(songItems);
+	console.log(playlisturl);
 	for (songItem in songItems) {
 		if (playlisturl.includes('/playlist/')) {
 			songNames.push(songItems[songItem]['track']['name']);
