@@ -20,9 +20,11 @@ function checkRefresh() {
 
 function checkURL() {
 	if (window.location.href.includes('playlisturl=')) {
+		playlisturl = origurl.slice(0, origurl.indexOf('spotify.com/')) + 'spotify.com/embed/' + origurl.slice(origurl.indexOf('spotify.com/') + 12, origurl.length);
 		getPlaylistHTML();
 	} else if (window.location.href.includes('access_token=')) {
 		document.getElementById('btnSpotifyAuth').style.display = 'none';
+		playlisturl = decodeURIComponent(myURL.searchParams.get('state'));
 		getAPIJSON(new URL(window.location.href.toString().replace(/#/g, '?')), 0);
 	} else if (window.location.href.includes('error=access_denied')) {
 		document.getElementById('btnSpotifyAuth').style.display = 'none';
