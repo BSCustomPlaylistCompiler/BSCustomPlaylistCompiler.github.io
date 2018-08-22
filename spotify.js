@@ -41,7 +41,7 @@ function spotifyAuth() {
 }
 
 function getPlaylistHTML() {
-	myURL = playlistURL;
+	myURL = playlisturl;
 	var htmlFile = new XMLHttpRequest();
 	htmlFile.open('GET', 'https://cors.io/?' + myURL, true);
 	htmlFile.onreadystatechange = function() {
