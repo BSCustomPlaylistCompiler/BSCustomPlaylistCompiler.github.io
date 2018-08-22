@@ -19,7 +19,7 @@ function checkURL() {
 	if (window.location.href.includes('playlisturl=')) {
 		getPlaylistHTML();
 	} else if (window.location.href.includes('access_token=')) {
-		getAPIJSON(new URL(window.location.href.toString().replace(/#/g, '?')));
+		getAPIJSON(new URL(window.location.href.toString().replace(/#/g, '?')), 0);
 	} else if (window.location.href.includes('error=access_denied')) {
 		alert('Spotify authentication error.');
 	} else {
@@ -38,13 +38,14 @@ function spotifyAuth() {
 }
 
 function getPlaylistHTML() {
+	myURL = getURL();
 	var htmlFile = new XMLHttpRequest();
-	htmlFile.open('GET', 'https://cors.io/?' + getURL(), true);
+	htmlFile.open('GET', 'https://cors.io/?' + myURL, true);
 	htmlFile.onreadystatechange = function() {
 		if (htmlFile.readyState === 4) {  // Makes sure the document is ready to parse.
 			if (htmlFile.status === 200) {  // Makes sure it's found the file.
 				var allText = htmlFile.responseText;
-				getSongs(allText);
+				getSongs(allText, false, 0, myURL);
 			} else {
 				getPlaylistHTML();
 			}
@@ -53,32 +54,37 @@ function getPlaylistHTML() {
 	htmlFile.send(null);
 }
 
-function getAPIJSON(myURL) {
+function getAPIJSON(myURL, offset) {
 	var jsonFile = new XMLHttpRequest();
 	var myPlaylistID = decodeURIComponent(myURL.searchParams.get('state'));
 	jsonFile.overrideMimeType('application/json');
 	var apiURL = ''
 	if (myPlaylistID.includes('playlist/')){
-		apiURL = 'https://api.spotify.com/v1/playlists/' + myPlaylistID.split('playlist/')[1] + '/tracks';
+		apiURL = 'https://api.spotify.com/v1/playlists/' + myPlaylistID.split('playlist/')[1] + '/tracks/?offset=' + offset;
 	} else if (myPlaylistID.includes('album/')) {
-		apiURL = 'https://api.spotify.com/v1/albums/' + myPlaylistID.split('album/')[1] + '/tracks';
+		apiURL = 'https://api.spotify.com/v1/albums/' + myPlaylistID.split('album/')[1] + '/tracks/?offset=' + offset;
 	}
-	console.log(apiURL);
 	jsonFile.open('GET', apiURL, true);
 	jsonFile.setRequestHeader('Authorization', 'Bearer ' + myURL.searchParams.get('access_token'));
 	jsonFile.onload  = function() {
 		var allText = JSON.parse(jsonFile.responseText);
 		console.log(allText);
+		getSongs(allText, true, offset, myURL);
 	};
 	jsonFile.send(null);
 }
 
-function getSongs(sourceHTML) {
-	var doc = new DOMParser().parseFromString(sourceHTML, 'text/html');
-	var resourceJSON = JSON.parse(doc.getElementById('resource').innerText);
-	songsListNum = parseInt(resourceJSON['tracks']['total']);
-	var songItems = resourceJSON['tracks']['items'];
-	songsLoadNum = songItems.length;
+function getSongs(sourceText, loggedIn, offset, myURL) {
+	var resourceJSON = null;
+	if (loggedIn) {
+		resourceJSON = JSON.parse(sourceText);
+	} else {
+		var doc = new DOMParser().parseFromString(sourceText, 'text/html');
+		resourceJSON = JSON.parse(doc.getElementById('resource').innerText)['tracks'];
+	}
+	songsListNum = parseInt(resourceJSON['total']);
+	var songItems = resourceJSON['items'];
+	songsLoadNum += songItems.length;
 	var songNames = new Array();
 	var songArtists = new Array();
 	for (songItem in songItems) {
@@ -112,6 +118,11 @@ function getSongs(sourceHTML) {
 		}
 		filtSong = filtSong.replace(/[^a-z0-9 ]/g, '');
 		getBeatsaverHTML(filtSong, songNames[song], songArtists[song]);
+	}
+	if (loggedIn == true && offset == 0 && songsListNum > songsLoadNum) {
+		for (x = 1; x < Math.ceil(songsListNum / 100), x++) {
+			getAPIJSON(myURL, x * 100)
+		}
 	}
 }
 
@@ -176,7 +187,7 @@ function displaySong(beatsaverHTML, songName, songArtist) {
 	}
 	updateDownloads();
 	songsLoaded += 1;
-	if (songsLoaded == songsLoadNum) {
+	if (songsLoaded >= songsLoadNum) {
 		document.getElementById('btnDownloadAll').disabled = false;
 		if (songsLoadNum < songsListNum) {
 			alert('The playlist has only loaded partially. Please login with Spotify to load the full playlist. (This is due to the limitations of the Spotify API)');
