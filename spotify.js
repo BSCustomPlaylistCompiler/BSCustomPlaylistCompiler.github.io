@@ -54,16 +54,16 @@ function getPlaylistHTML() {
 }
 
 function getAPIJSON(myURL) {
+	var jsonFile = new XMLHttpRequest();
 	var myPlaylistID = decodeURIComponent(myURL.searchParams.get('state'));
+	jsonFile.overrideMimeType('application/json');
 	if (myPlaylistID.includes('playlist/')){
 		myPlaylistID = myPlaylistID.split('playlist/')[1];
+		jsonFile.open('GET', 'https://api.spotify.com/v1/playlists/' + myPlaylistID + '/tracks', true);
 	} else if (myPlaylistID.includes('album/')) {
 		myPlaylistID = myPlaylistID.split('album/')[1];
-	}
-	var jsonFile = new XMLHttpRequest();
-	jsonFile.overrideMimeType('application/json');
-	jsonFile.setRequestHeader('Authorization', myURL.searchParams.get('access_token'))
-	jsonFile.open('GET', 'https://api.spotify.com/v1/playlists/' + myPlaylistID + '/tracks', true);
+		jsonFile.open('GET', 'https://api.spotify.com/v1/albums/' + myPlaylistID + '/tracks', true);
+	jsonFile.setRequestHeader('Authorization', myURL.searchParams.get('access_token'));
 	jsonFile.onload  = function() {
 		var allText = JSON.parse(req.responseText);
 		console.log(allText);
