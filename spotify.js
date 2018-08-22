@@ -63,6 +63,7 @@ function getAPIJSON(myURL) {
 	} else if (myPlaylistID.includes('album/')) {
 		myPlaylistID = myPlaylistID.split('album/')[1];
 		jsonFile.open('GET', 'https://api.spotify.com/v1/albums/' + myPlaylistID + '/tracks', true);
+	}
 	jsonFile.setRequestHeader('Authorization', myURL.searchParams.get('access_token'));
 	jsonFile.onload  = function() {
 		var allText = JSON.parse(req.responseText);
