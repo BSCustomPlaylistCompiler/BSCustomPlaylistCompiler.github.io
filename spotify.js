@@ -19,14 +19,15 @@ function checkURL() {
 	if (window.location.href.includes('playlisturl='))
 		getPlaylistHTML();
 	} else if (window.location.href.includes('access_token=')) {
-		alert(new URL(window.location.href).searchParams.get('access_token'));
+		alert(window.location.href.toString().replace(/#/g, '?'));
+		alert(new URL(window.location.href.toString().replace(/#/g, '?')).searchParams.get('access_token'));
 	} else {
 		alert('No playlist URL was detected');
 	}
 }
 
 function getURL() {
-	var origurl = decodeURIComponent(new URL(window.location.href.toString().replace(/#/g, '?')).searchParams.get('playlisturl'));
+	var origurl = decodeURIComponent(new URL(window.location.href).searchParams.get('playlisturl'));
 	playlisturl = origurl.slice(0, origurl.indexOf('spotify.com/')) + 'spotify.com/embed/' + origurl.slice(origurl.indexOf('spotify.com/') + 12, origurl.length);
 	return playlisturl;
 }
