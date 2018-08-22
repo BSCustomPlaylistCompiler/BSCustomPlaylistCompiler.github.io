@@ -56,14 +56,16 @@ function getPlaylistHTML() {
 function getAPIJSON(myURL) {
 	var jsonFile = new XMLHttpRequest();
 	var myPlaylistID = decodeURIComponent(myURL.searchParams.get('state'));
+	console.log(myPlaylistID);
 	jsonFile.overrideMimeType('application/json');
+	var apiURL = ''
 	if (myPlaylistID.includes('playlist/')){
-		myPlaylistID = myPlaylistID.split('playlist/')[1];
-		jsonFile.open('GET', 'https://api.spotify.com/v1/playlists/' + myPlaylistID + '/tracks', true);
+		apiURL = 'https://api.spotify.com/v1/playlists/' + myPlaylistID.split('playlist/')[1] + '/tracks';
 	} else if (myPlaylistID.includes('album/')) {
-		myPlaylistID = myPlaylistID.split('album/')[1];
-		jsonFile.open('GET', 'https://api.spotify.com/v1/albums/' + myPlaylistID + '/tracks', true);
+		apiURL = 'https://api.spotify.com/v1/albums/' + myPlaylistID.split('album/')[1] + '/tracks';
 	}
+	console.log(apiURL);
+	jsonFile.open('GET', apiURL, true);
 	jsonFile.setRequestHeader('Authorization', myURL.searchParams.get('access_token'));
 	jsonFile.onload  = function() {
 		var allText = JSON.parse(req.responseText);
@@ -190,10 +192,11 @@ function updateDownloads() {
 		if (arrRow != 0) {
 			var myRow = table.rows[arrRow];
 			var mySelect = null;
+			var bsSongID = '[No Song]'
 			try {
 				mySelect = myRow.cells[2].getElementsByTagName('select')[0];
+				bsSongID = mySelect.options[mySelect.selectedIndex].value;
 			} catch (err) {}
-			var bsSongID = mySelect.options[mySelect.selectedIndex].value;
 			if (bsSongID == '[No Song]') {
 				try {
 					myRow.cells[3].innerHTML = 'N/A';
