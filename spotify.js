@@ -26,12 +26,12 @@ function checkURL() {
 }
 
 function getURL() {
-	var origurl = decodeURIComponent(new URL(window.location.href).searchParams.get('playlisturl'));
+	var origurl = decodeURIComponent(new URL(window.location.href.toString().replace(/#/g, '?')).searchParams.get('playlisturl'));
 	playlisturl = origurl.slice(0, origurl.indexOf('spotify.com/')) + 'spotify.com/embed/' + origurl.slice(origurl.indexOf('spotify.com/') + 12, origurl.length);
 	return playlisturl;
 }
 
-function spotifyLogin() {
+function spotifyAuth() {
 	window.location.href = 'https://accounts.spotify.com/authorize?client_id=9ada7451c6074f77a81609aacde7efb8&response_type=token&redirect_uri=' + encodeURIComponent(window.location.href.split('?')[0]) + '&state=' + encodeURIComponent(new URL(window.location.href).searchParams.get('playlisturl')) + '&scope=playlist-read-collaborative%20playlist-read-private';
 }
 
