@@ -49,7 +49,7 @@ function getPlaylistHTML() {
 				getPlaylistHTML();
 			}
 		}
-	}
+	};
 	htmlFile.send(null);
 }
 
@@ -73,7 +73,7 @@ function getAPIJSON(myURL) {
 }
 
 function getSongs(sourceHTML) {
-	var doc = (new DOMParser).parseFromString(sourceHTML, 'text/html');
+	var doc = new DOMParser().parseFromString(sourceHTML, 'text/html');
 	var resourceJSON = JSON.parse(doc.getElementById('resource').innerText);
 	songsListNum = parseInt(resourceJSON['tracks']['total']);
 	var songItems = resourceJSON['tracks']['items'];
@@ -126,7 +126,7 @@ function getBeatsaverHTML(filtSong, songName, songArtist) {
 				getBeatsaverHTML(filtSong, songName, songArtist);
 			}
 		}
-	}
+	};
 	htmlFile.send(null);
 }
 
@@ -153,10 +153,10 @@ function displaySong(beatsaverHTML, songName, songArtist) {
 			var secondIndex = beatsaverHTML.slice(parseInt(thisIndex), beatsaverHTML.length).indexOf('"');
 			bsSongID = beatsaverHTML.slice(parseInt(thisIndex), parseInt(thisIndex) + parseInt(secondIndex));
 			if (bsSongID.includes('ail/')) {
-				bsSongID = bsSongID.slice(4, bsSongID.length)
+				bsSongID = bsSongID.slice(4, bsSongID.length);
 			}
 			if (bsSongID.includes('etail/')) {
-				bsSongID = bsSongID.slice(6, bsSongID.length)
+				bsSongID = bsSongID.slice(6, bsSongID.length);
 			}
 			var thirdIndex = beatsaverHTML.slice(parseInt(thisIndex) + parseInt(secondIndex) + 6, beatsaverHTML.length).indexOf('</h2></a>');
 			bsSongName = beatsaverHTML.slice(parseInt(thisIndex) + parseInt(secondIndex) + 6, parseInt(thisIndex) + parseInt(secondIndex) + 6 + parseInt(thirdIndex));
@@ -189,8 +189,9 @@ function updateDownloads() {
 	for (arrRow in table.rows) {
 		if (arrRow != 0) {
 			var myRow = table.rows[arrRow];
+			var mySelect = null;
 			try {
-				var mySelect = myRow.cells[2].getElementsByTagName('select')[0];
+				mySelect = myRow.cells[2].getElementsByTagName('select')[0];
 			} catch (err) {}
 			var bsSongID = mySelect.options[mySelect.selectedIndex].value;
 			if (bsSongID == '[No Song]') {
@@ -223,8 +224,9 @@ function downloadAll() {
 	for (arrRow in table.rows) {
 		if (arrRow != 0) {
 			var myRow = table.rows[arrRow];
+			var mySelect = null;
 			try {
-				var mySelect = myRow.cells[2].getElementsByTagName('select')[0];
+				mySelect = myRow.cells[2].getElementsByTagName('select')[0];
 			} catch (err) {}
 			var bsSongID = mySelect.options[mySelect.selectedIndex].value;
 			if (bsSongID != '[No Song]') {
