@@ -22,7 +22,9 @@ function getURL() {
 }
 
 function spotifyLogin() {
-	window.location.href = 'https://accounts.spotify.com/authorize?client_id=9ada7451c6074f77a81609aacde7efb8&response_type=token&redirect_uri=' + encodeURIComponent(window.location.href.split('?')[0]) + '&state=' + new URL(window.location.href).searchParams.get('playlisturl') + 'scope=playlist-read-collaborative%20playlist-read-private';
+	alert(window.location.href.split('?')[0] + ' - ' + encodeURIComponent(window.location.href.split('?')[0]));
+	alert(encodeURIComponent(new URL(window.location.href).searchParams.get('playlisturl')));
+	window.location.href = 'https://accounts.spotify.com/authorize?client_id=9ada7451c6074f77a81609aacde7efb8&response_type=token&redirect_uri=' + encodeURIComponent(window.location.href.split('?')[0]) + '&state=' + encodeURIComponent(new URL(window.location.href).searchParams.get('playlisturl')) + '&scope=playlist-read-collaborative%20playlist-read-private';
 }
 
 
