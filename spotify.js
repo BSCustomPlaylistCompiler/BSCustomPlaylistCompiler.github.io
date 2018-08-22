@@ -73,8 +73,7 @@ function getAPIJSON(myURL, offset) {
 	jsonFile.open('GET', apiURL, true);
 	jsonFile.setRequestHeader('Authorization', 'Bearer ' + myURL.searchParams.get('access_token'));
 	jsonFile.onload  = function() {
-		var allText = JSON.parse(jsonFile.responseText);
-		console.log(allText);
+		var allText = jsonFile.responseText;
 		getSongs(allText, true, offset, myURL);
 	};
 	jsonFile.send(null);
