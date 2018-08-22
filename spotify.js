@@ -20,11 +20,12 @@ function checkRefresh() {
 
 function checkURL() {
 	if (window.location.href.includes('playlisturl=')) {
+		var origurl = decodeURIComponent(new URL(window.location.href).searchParams.get('playlisturl'));
 		playlisturl = origurl.slice(0, origurl.indexOf('spotify.com/')) + 'spotify.com/embed/' + origurl.slice(origurl.indexOf('spotify.com/') + 12, origurl.length);
 		getPlaylistHTML();
 	} else if (window.location.href.includes('access_token=')) {
 		document.getElementById('btnSpotifyAuth').style.display = 'none';
-		playlisturl = decodeURIComponent(myURL.searchParams.get('state'));
+		playlisturl = decodeURIComponent(new URL(window.location.href).searchParams.get('state'));
 		getAPIJSON(new URL(window.location.href.toString().replace(/#/g, '?')), 0);
 	} else if (window.location.href.includes('error=access_denied')) {
 		document.getElementById('btnSpotifyAuth').style.display = 'none';
@@ -35,18 +36,12 @@ function checkURL() {
 	}
 }
 
-function getURL() {
-	var origurl = decodeURIComponent(new URL(window.location.href).searchParams.get('playlisturl'));
-	playlisturl = origurl.slice(0, origurl.indexOf('spotify.com/')) + 'spotify.com/embed/' + origurl.slice(origurl.indexOf('spotify.com/') + 12, origurl.length);
-	return playlisturl;
-}
-
 function spotifyAuth() {
 	window.location.href = 'https://accounts.spotify.com/authorize?client_id=9ada7451c6074f77a81609aacde7efb8&response_type=token&redirect_uri=' + encodeURIComponent(window.location.href.split('?')[0]) + '&state=' + encodeURIComponent(new URL(window.location.href).searchParams.get('playlisturl')) + '&scope=playlist-read-collaborative%20playlist-read-private';
 }
 
 function getPlaylistHTML() {
-	myURL = getURL();
+	myURL = playlistURL;
 	var htmlFile = new XMLHttpRequest();
 	htmlFile.open('GET', 'https://cors.io/?' + myURL, true);
 	htmlFile.onreadystatechange = function() {
