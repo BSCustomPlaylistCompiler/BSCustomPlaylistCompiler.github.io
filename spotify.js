@@ -6,7 +6,7 @@ var songsListNum = 0;
 var songsEnabled = 0;
 var songsDownloaded = 0;
 
-window.onload() = function() {
+window.onload = function() {
 	checkURL();
 	window.setTimeout(checkRefresh, 15000);
 };
