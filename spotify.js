@@ -19,7 +19,6 @@ function checkRefresh() {
 }
 
 function checkURL() {
-	console.log('Checking URL');
 	if (window.location.href.includes('playlisturl=')) {
 		getPlaylistHTML();
 	} else if (window.location.href.includes('access_token=')) {
@@ -89,6 +88,7 @@ function getSongs(sourceText, loggedIn, offset, myURL) {
 		var doc = new DOMParser().parseFromString(sourceText, 'text/html');
 		resourceJSON = JSON.parse(doc.getElementById('resource').innerText)['tracks'];
 	}
+	console.log(resourceJSON);
 	songsListNum = parseInt(resourceJSON['total']);
 	var songItems = resourceJSON['items'];
 	songsLoadNum += songItems.length;
