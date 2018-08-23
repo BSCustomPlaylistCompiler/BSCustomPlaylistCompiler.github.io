@@ -4,7 +4,6 @@
 	<meta name="author" content="Alec Coates">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="description" content="Spotify Playlist">
-	<button type="button" id="btnHome" onclick="window.location.href='index.html'" style="float: left; margin-left: 8em; margin-top: 1em;">Home</button>
 	<title>Spotify Playlist</title>
 	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=A07eBjalvo">
 	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=A07eBjalvo">
@@ -19,30 +18,52 @@
 	<script src="Blob.js"></script>
 	<script src="FileSaver.js"></script>
 	<script type="text/javascript" src="spotify.js"></script>
+	<link rel="stylesheet" href="w3.css">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<style>
-		table, th, td {
-			border: 1px solid grey;
-			border-collapse: collapse;
+		body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", sans-serif}
+		body, html {
+			height: 100%;
+			line-height: 1.8;
 		}
-		th, td {
-			padding: 5px;
+		.w3-bar .w3-button {
+			padding: 16px;
 		}
 	</style>
 </head>
 <body>
-	<button type="button" id="btnSpotifyAuth" onclick="spotifyAuth()" style="float: right; margin-right: 8em; margin-top: 1em;">Login with Spotify for full playlist</button>
-	<h1 style="text-align: center;">Spotify Playlist</h1>
-	<div id="content">
-		<table id ="songTable" style="margin: 1em auto; text-align: left-side; width:90%">
-			<tr>
-				<th>Song</th>
-				<th>Artist</th> 
-				<th>Beatsaver</th>
-				<th>Download</th>
-			</tr>
-		</table>
-		<button type="button" id="btnDownloadAll" onclick="downloadAll()" style="float: right; margin-right: 8em;" disabled>Download All</button>
+	<!-- Navbar (sit on top) -->
+	<div class="w3-top">
+		<div class="w3-bar w3-white w3-card" id="myNavbar">
+			<a href="index.html" class="w3-bar-item w3-button w3-wide" id="btnHome">HOME</a>
+			<!-- Right-sided navbar links -->
+			<div class="w3-right w3-hide-small">
+				<a onclick="submitURL(document.getElementById('urlInput').value);" class="w3-bar-item w3-button" id="btnSearch"><i class="fa fa-search"></i> SEARCH</a>
+			</div>
+			<div class="w3-right w3-hide-small" style="padding-top:6px; width:35%">
+				<input type="text" name="playlisturl" class="w3-input w3-border w3-round" placeholder="Playlist URL" id="urlInput">
+			</div>
+		</div>
 	</div>
-	<p style="text-align: center;">&nbsp;</p>
+	
+	<div style="padding-top:60px">
+		<button id="btnSpotifyAuth" onclick="spotifyAuth()" class="w3-button w3-round w3-border w3-green" style="float: right; margin-right: 5%; margin-top: 1.6em;">Login with Spotify for full playlist</button>
+		<h1 style="text-align: center;">Spotify Playlist</h1>
+		<div id="content">
+			<div class="w3-responsive">
+				<table id="songTable" class="w3-table w3-striped w3-border w3-hoverable" style="margin: 1em auto; text-align: left-side; width:90%">
+					<tr class="w3-green">
+						<th>Song</th>
+						<th>Artist</th> 
+						<th>Beatsaver</th>
+						<th>Download</th>
+					</tr>
+				</table>
+			</div>
+			<button id="btnDownloadAll" onclick="downloadAll()" class="w3-button w3-round w3-border w3-green" style="float: right; margin-right: 5%;" disabled>Download All</button>
+		</div>
+	</div>
+	<p style="text-align: center; padding-bottom: 20px;">&nbsp;</p>
 </body>
 </html>

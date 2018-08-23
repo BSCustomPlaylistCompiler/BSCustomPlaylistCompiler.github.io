@@ -16,30 +16,47 @@ permalink: /404.html
 	<link rel="shortcut icon" href="/favicon.ico?v=A07eBjalvo">
 	<meta name="msapplication-TileColor" content="#372cad">
 	<meta name="theme-color" content="#ffffff">
+	<script type="text/javascript" src="index.js"></script>
+	<link rel="stylesheet" href="w3.css">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<style>
+		body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", sans-serif}
+		body, html {
+			height: 100%;
+			line-height: 1.8;
+		}
+		.bgimg-1 {
+			background-position: center;
+			background-size: cover;
+			background-image: url("pexels-photo-257904.jpeg");
+			min-height: 100%;
+		}
+		.w3-bar .w3-button {
+			padding: 16px;
+		}
+	</style>
 </head>
 <body>
-	<div id="msg">
-		<h1>
-			<pre id="taag_output_text" style="float:left;" class="fig-ansi" contenteditable="true">
-			███████╗██████╗ ██████╗  ██████╗ ██████╗     ██╗  ██╗ ██████╗ ██╗  ██╗   
-			██╔════╝██╔══██╗██╔══██╗██╔═══██╗██╔══██╗    ██║  ██║██╔═████╗██║  ██║██╗
-			█████╗  ██████╔╝██████╔╝██║   ██║██████╔╝    ███████║██║██╔██║███████║╚═╝
-			██╔══╝  ██╔══██╗██╔══██╗██║   ██║██╔══██╗    ╚════██║████╔╝██║╚════██║██╗
-			███████╗██║  ██║██║  ██║╚██████╔╝██║  ██║         ██║╚██████╔╝     ██║╚═╝
-			╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═╝         ╚═╝ ╚═════╝      ╚═╝   
-			</pre>
-		</h1>
-		<h3>
-			<pre id="taag_output_text" style="float:left;" class="fig-ansi" contenteditable="true">
-					    ██████╗  █████╗  ██████╗ ███████╗    ███╗   ██╗ ██████╗ ████████╗    ███████╗ ██████╗ ██╗   ██╗███╗   ██╗██████╗    
-					    ██╔══██╗██╔══██╗██╔════╝ ██╔════╝    ████╗  ██║██╔═══██╗╚══██╔══╝    ██╔════╝██╔═══██╗██║   ██║████╗  ██║██╔══██╗   
-					    ██████╔╝███████║██║  ███╗█████╗      ██╔██╗ ██║██║   ██║   ██║       █████╗  ██║   ██║██║   ██║██╔██╗ ██║██║  ██║   
-					    ██╔═══╝ ██╔══██║██║   ██║██╔══╝      ██║╚██╗██║██║   ██║   ██║       ██╔══╝  ██║   ██║██║   ██║██║╚██╗██║██║  ██║   
-					    ██║     ██║  ██║╚██████╔╝███████╗    ██║ ╚████║╚██████╔╝   ██║       ██║     ╚██████╔╝╚██████╔╝██║ ╚████║██████╔╝██╗
-					    ╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚══════╝    ╚═╝  ╚═══╝ ╚═════╝    ╚═╝       ╚═╝      ╚═════╝  ╚═════╝ ╚═╝  ╚═══╝╚═════╝ ╚═╝
-			</pre>
-		</h3>
-		<button type="button" id="btnHome" onclick="window.location.href='index.html'" style="position:absolute; left:700; top:485; font-size:26px; font-weight: bold; width:205; height:50;">Take me home.</button>
+	<!-- Navbar (sit on top) -->
+	<div class="w3-top">
+		<div class="w3-bar w3-white w3-card" id="myNavbar">
+			<a href="index.html" class="w3-bar-item w3-button w3-wide" id="btnHome">HOME</a>
+			<!-- Right-sided navbar links -->
+			<div class="w3-right w3-hide-small">
+				<a onclick="submitURL(document.getElementById('urlInput').value);" class="w3-bar-item w3-button" id="btnSearch"><i class="fa fa-search"></i> SEARCH</a>
+			</div>
+			<div class="w3-right w3-hide-small" style="padding-top:6px; width:35%">
+				<input type="text" name="playlisturl" class="w3-input w3-border w3-round" placeholder="Playlist URL" id="urlInput">
+			</div>
+		</div>
 	</div>
+	
+	<!-- Header with full-height image -->
+	<header class="bgimg-1 w3-display-container w3-grayscale-min" id="home">
+		<div class="w3-display-left w3-text-white" style="padding:10%">
+			<span class="w3-jumbo w3-hide-small" style="text-shadow:2px 2px 0 rgba(10, 10, 10, 1)">Error 404: Page Not Found</span><br>
+		</div>
+	</header>
 </body>
 </html>
