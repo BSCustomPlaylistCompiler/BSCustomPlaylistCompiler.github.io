@@ -93,7 +93,7 @@ function getAPIJSON(myURL, offset) {
 function getSongs(sourceText, loggedIn, offset, myURL) {
 	var resourceJSON = null;
 	if (loggedIn) {
-		resourceJSON = JSON.parse(sourceText);
+		resourceJSON = JSON.parse(sourceText)['tracks'];
 	} else {
 		var doc = new DOMParser().parseFromString(sourceText, 'text/html');
 		resourceJSON = JSON.parse(doc.getElementById('resource').innerText)['tracks'];
