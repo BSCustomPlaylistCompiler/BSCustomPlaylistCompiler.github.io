@@ -9,26 +9,12 @@ var songsDownloaded = 0;
 window.onload = function() {
 	checkURL();
 	window.setTimeout(checkRefresh, 15000);
-	var searchBox = document.getElementById("urlInput");
-	input.addEventListener("keyup", function(event) {
-		event.preventDefault();
-		if (event.keyCode === 13) {
-			submitURL(document.getElementById('urlInput').value);
-		}
-	});
 };
 
-function search(ele) {
+function enterURL(ele) {
     if(event.key === 'Enter') {
         submitURL(ele.value);        
     }
-}
-
-function checkRefresh() {
-	if (document.getElementById('songTable').rows.length == 1) {
-		console.log('reload');
-		location.reload();
-	}
 }
 
 function submitURL(playlisturl) {
@@ -36,6 +22,13 @@ function submitURL(playlisturl) {
 		window.location.href = 'spotify.html?playlisturl=' + encodeURIComponent(playlisturl);
 	} else if (playlisturl.toLowerCase().includes('youtube.com')) {
 		window.location.href = 'youtube.html?playlisturl=' + encodeURIComponent(playlisturl);
+	}
+}
+
+function checkRefresh() {
+	if (document.getElementById('songTable').rows.length == 1) {
+		console.log('reload');
+		location.reload();
 	}
 }
 
@@ -50,10 +43,10 @@ function checkURL() {
 		getAPIJSON(new URL(window.location.href.toString().replace(/#/g, '?')), 0);
 	} else if (window.location.href.includes('error=access_denied')) {
 		document.getElementById('btnSpotifyAuth').style.display = 'none';
-		alert('Spotify authentication error.');
+		document.getElementById('alertSpace').innerHTML = '<div class="w3-panel w3-red w3-card-4 w3-display-container" style="width:90%; margin-left:5%;"><span onclick="this.parentElement.style.display=\'none\'"class="w3-button w3-display-topright">&times;</span><h3>Warning!</h3><p>Spotify Authentication Error.</p></div>';
 	} else {
 		document.getElementById('btnSpotifyAuth').style.display = 'none';
-		alert('No playlist URL was detected');
+		document.getElementById('alertSpace').innerHTML = '<div class="w3-panel w3-red w3-card-4 w3-display-container" style="width:90%; margin-left:5%;"><span onclick="this.parentElement.style.display=\'none\'"class="w3-button w3-display-topright">&times;</span><h3>Warning!</h3><p>No playlist URL was detected.</p></div>';
 	}
 }
 
@@ -213,7 +206,7 @@ function displaySong(beatsaverHTML, songName, songArtist) {
 	if (songsLoaded >= songsLoadNum) {
 		document.getElementById('btnDownloadAll').disabled = false;
 		if (songsLoadNum < songsListNum) {
-			alert('The playlist has only loaded partially. Please login with Spotify to load the full playlist. (This is due to the limitations of the Spotify API)');
+			document.getElementById('spotifyWarningSpace').innerHTML = '<div class="w3-panel w3-yellow w3-card-4 w3-display-container" style="width:90%; margin-left:5%;"><span onclick="this.parentElement.style.display=\'none\'"class="w3-button w3-display-topright">&times;</span><h3>The playlist has only loaded partially!</h3><p>Please login with Spotify to load the full playlist. (This is due to the limitations of the Spotify API)</p></div>';
 		}
 	}
 }

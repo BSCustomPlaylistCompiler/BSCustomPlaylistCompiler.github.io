@@ -41,13 +41,13 @@ permalink: /404.html
 	<!-- Navbar (sit on top) -->
 	<div class="w3-top">
 		<div class="w3-bar w3-white w3-card" id="myNavbar">
-			<a href="index.html" class="w3-bar-item w3-button" id="btnHome"><div class="w3-hide-small" style="display: inline"> HOME</div></a>
+			<a href="index.html" class="w3-bar-item w3-button" id="btnHome"><i class="fa fa-home"></i><div class="w3-hide-small" style="display: inline"> HOME</div></a>
 			<!-- Right-sided navbar links -->
 			<div class="w3-right">
 				<a onclick="submitURL(document.getElementById('urlInput').value);" class="w3-bar-item w3-button" id="btnSearch"><i class="fa fa-search"></i><div class="w3-hide-small" style="display: inline"> SEARCH</div></a>
 			</div>
 			<div class="w3-right" style="padding-top:6px; width:35%; min-width:280px">
-				<input type="text" name="playlisturl" onkeydown="search(this);" class="w3-input w3-border w3-round" placeholder="Playlist URL" id="urlInput">
+				<input type="text" name="playlisturl" onkeydown="enterURL(this);" class="w3-input w3-border w3-round" placeholder="Playlist URL" id="urlInput">
 			</div>
 		</div>
 	</div>

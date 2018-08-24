@@ -40,13 +40,13 @@
 	<!-- Navbar (sit on top) -->
 	<div class="w3-top">
 		<div class="w3-bar w3-white w3-card" id="myNavbar">
-			<a href="index.html" class="w3-bar-item w3-button" id="btnHome"><div class="w3-hide-small" style="display: inline"> HOME</div></a>
+			<a href="index.html" class="w3-bar-item w3-button" id="btnHome"><i class="fa fa-home"></i><div class="w3-hide-small" style="display: inline"> HOME</div></a>
 			<!-- Right-sided navbar links -->
 			<div class="w3-right">
 				<a onclick="submitURL(document.getElementById('urlInput').value);" class="w3-bar-item w3-button" id="btnSearch"><i class="fa fa-search"></i><div class="w3-hide-small" style="display: inline"> SEARCH</div></a>
 			</div>
-			<div class="w3-right" style="padding-top:6px; width:35%; min-width:280px">
-				<input type="text" name="playlisturl" onkeydown="search(this);" class="w3-input w3-border w3-round" placeholder="Playlist URL" id="urlInput">
+			<div class="w3-right" style="padding-top:6px; width:35%; min-width:220px">
+				<input type="text" name="playlisturl" onkeydown="enterURL(this);" class="w3-input w3-border w3-round" placeholder="Playlist URL" id="urlInput">
 			</div>
 		</div>
 	</div>
@@ -54,12 +54,19 @@
 	<!-- Header with full-height image -->
 	<header class="bgimg-1 w3-display-container w3-grayscale-min" id="home">
 		<div class="w3-display-left w3-text-white" style="padding:6%">
-			<span class="w3-xxxlarge w3-hide-small" style="text-shadow:2px 2px 0 rgba(10, 10, 10, 1)">Beat Saver Custom Playlist Compiler<br></span>
-			<span class="w3-xlarge w3-hide-small" style="text-shadow:1px 1px 0 rgba(10, 10, 10, 1)">Accepted Playlist URLs Include:<br></span>
-			<span class="w3-large w3-hide-small" style="text-shadow:1px 1px 0 rgba(10, 10, 10, 1)">Spotify Playlist (100 track limit without login) - (https://open.spotify.com/user/[username]/playlist/[playlistID])<br></span>
-			<span class="w3-large w3-hide-small" style="text-shadow:1px 1px 0 rgba(10, 10, 10, 1)">Spotify Album (100 track limit without login) - (https://open.spotify.com/album/[albumID])<br></span>
-			<span class="w3-large w3-hide-small" style="text-shadow:1px 1px 0 rgba(10, 10, 10, 1)">Youtube Playlist (No track limit) - (https://www.youtube.com/playlist?list=[playlistID])<br></span>
-			<span class="w3-large w3-hide-small" style="text-shadow:1px 1px 0 rgba(10, 10, 10, 1)">               ∟ (https://www.youtube.com/watch?v=[videoID]&list=[playlistID])<br></span>
+			<span class="w3-xxxlarge w3-hide-small w3-hide-medium" style="text-shadow:2px 2px 0 rgba(10, 10, 10, 1)">Beat Saver Custom Playlist Compiler<br></span>
+			<span class="w3-xlarge w3-hide-small w3-hide-medium" style="text-shadow:1px 1px 0 rgba(10, 10, 10, 1)">Accepted Playlist URLs Include:<br></span>
+			<span class="w3-large w3-hide-small w3-hide-medium" style="text-shadow:1px 1px 0 rgba(10, 10, 10, 1)">Spotify Playlist (100 track limit without login) - (https://open.spotify.com/user/[username]/playlist/[playlistID])<br></span>
+			<span class="w3-large w3-hide-small w3-hide-medium" style="text-shadow:1px 1px 0 rgba(10, 10, 10, 1)">Spotify Album (100 track limit without login) - (https://open.spotify.com/album/[albumID])<br></span>
+			<span class="w3-large w3-hide-small w3-hide-medium" style="text-shadow:1px 1px 0 rgba(10, 10, 10, 1)">Youtube Playlist (No track limit) - (https://www.youtube.com/playlist?list=[playlistID])<br></span>
+			<span class="w3-large w3-hide-small w3-hide-medium" style="text-shadow:1px 1px 0 rgba(10, 10, 10, 1)">               ∟ (https://www.youtube.com/watch?v=[videoID]&list=[playlistID])<br></span>
+			
+			<span class="w3-xxlarge w3-hide-small w3-hide-large" style="text-shadow:2px 2px 0 rgba(10, 10, 10, 1)">Beat Saver Custom Playlist Compiler<br></span>
+			<span class="w3-large w3-hide-small w3-hide-large" style="text-shadow:1px 1px 0 rgba(10, 10, 10, 1)">Accepted Playlist URLs Include:<br></span>
+			<span class="w3-medium w3-hide-small w3-hide-large" style="text-shadow:1px 1px 0 rgba(10, 10, 10, 1)">Spotify Playlist (100 track limit without login) - (https://open.spotify.com/user/[username]/playlist/[playlistID])<br></span>
+			<span class="w3-medium w3-hide-small w3-hide-large" style="text-shadow:1px 1px 0 rgba(10, 10, 10, 1)">Spotify Album (100 track limit without login) - (https://open.spotify.com/album/[albumID])<br></span>
+			<span class="w3-medium w3-hide-small w3-hide-large" style="text-shadow:1px 1px 0 rgba(10, 10, 10, 1)">Youtube Playlist (No track limit) - (https://www.youtube.com/playlist?list=[playlistID])<br></span>
+			<span class="w3-medium w3-hide-small w3-hide-large" style="text-shadow:1px 1px 0 rgba(10, 10, 10, 1)">               ∟ (https://www.youtube.com/watch?v=[videoID]&list=[playlistID])<br></span>
 			
 			<span class="w3-xlarge w3-hide-medium w3-hide-large" style="text-shadow:2px 2px 0 rgba(10, 10, 10, 1)">Beat Saver Custom Playlist Compiler<br></span>
 			<span class="w3-medium w3-hide-medium w3-hide-large" style="text-shadow:1px 1px 0 rgba(10, 10, 10, 1)">Accepted Playlist URLs Include:<br></span>

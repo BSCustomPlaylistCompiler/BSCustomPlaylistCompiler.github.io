@@ -1,4 +1,4 @@
-function search(ele) {
+function enterURL(ele) {
     if(event.key === 'Enter') {
         submitURL(ele.value);        
     }

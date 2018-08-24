@@ -43,7 +43,7 @@
 				<a onclick="submitURL(document.getElementById('urlInput').value);" class="w3-bar-item w3-button" id="btnSearch"><i class="fa fa-search"></i><div class="w3-hide-small" style="display: inline"> SEARCH</div></a>
 			</div>
 			<div class="w3-right" style="padding-top:6px; width:35%; min-width:280px">
-				<input type="text" name="playlisturl" onkeydown="search(this);" class="w3-input w3-border w3-round" placeholder="Playlist URL" id="urlInput">
+				<input type="text" name="playlisturl" onkeydown="enterURL(this);" class="w3-input w3-border w3-round" placeholder="Playlist URL" id="urlInput">
 			</div>
 		</div>
 	</div>
@@ -53,6 +53,8 @@
 		<div style="text-align: center; margin-top: 1em;"><button id="btnSpotifyAuthM" onclick="spotifyAuth()" class="w3-button w3-round w3-border w3-green w3-hide-medium w3-hide-large">Login with Spotify for full playlist</button></div>
 		<h1 style="text-align: center;">Spotify Playlist</h1>
 		<div id="content">
+			<div id="spotifyWarningSpace"></div>
+			<div id="alertSpace"></div>
 			<div class="w3-responsive">
 				<table id="songTable" class="w3-table w3-striped w3-border w3-hoverable" style="margin: 1em auto; text-align: left-side; width:90%">
 					<tr class="w3-green">

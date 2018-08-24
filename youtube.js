@@ -8,26 +8,12 @@ var songsRequested = 0;
 window.onload = function() {
 	getPlaylistHTML();
 	window.setTimeout(checkRefresh, 15000);
-	var searchBox = document.getElementById("urlInput");
-	input.addEventListener("keyup", function(event) {
-		event.preventDefault();
-		if (event.keyCode === 13) {
-			submitURL(document.getElementById('urlInput').value);
-		}
-	});
 };
 
-function search(ele) {
+function enterURL(ele) {
     if(event.key === 'Enter') {
         submitURL(ele.value);        
     }
-}
-
-function checkRefresh() {
-	if (document.getElementById('songTable').rows.length == 1) {
-		console.log('reload');
-		location.reload();
-	}
 }
 
 function submitURL(playlisturl) {
@@ -35,6 +21,13 @@ function submitURL(playlisturl) {
 		window.location.href = 'spotify.html?playlisturl=' + encodeURIComponent(playlisturl);
 	} else if (playlisturl.toLowerCase().includes('youtube.com')) {
 		window.location.href = 'youtube.html?playlisturl=' + encodeURIComponent(playlisturl);
+	}
+}
+
+function checkRefresh() {
+	if (document.getElementById('songTable').rows.length == 1) {
+		console.log('reload');
+		location.reload();
 	}
 }
 
@@ -73,12 +66,10 @@ function getPlaylistHTML() {
 			}
 			htmlFile.send(null);
 		} else {
-			alert('Invalid URL - List submitted is not a playlist.');
-			window.location.href = 'index.html';
+			document.getElementById('alertSpace').innerHTML = '<div class="w3-panel w3-red w3-card-4 w3-display-container" style="width:90%; margin-left:5%;"><span onclick="this.parentElement.style.display=\'none\'"class="w3-button w3-display-topright">&times;</span><h3>Warning!</h3><p>List submitted is not a playlist.</p></div>';
 		}
 	} else {
-		alert('Invalid URL - No list detected.');
-		window.location.href = 'index.html';
+		document.getElementById('alertSpace').innerHTML = '<div class="w3-panel w3-red w3-card-4 w3-display-container" style="width:90%; margin-left:5%;"><span onclick="this.parentElement.style.display=\'none\'"class="w3-button w3-display-topright">&times;</span><h3>Warning!</h3><p>No list detected.</p></div>';
 	}
 }
 
