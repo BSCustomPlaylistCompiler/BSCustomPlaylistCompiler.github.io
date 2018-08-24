@@ -99,6 +99,7 @@ function getSongs(sourceText, loggedIn, offset, myURL) {
 		resourceJSON = JSON.parse(doc.getElementById('resource').innerText)['tracks'];
 	}
 	songsListNum = parseInt(resourceJSON['total']);
+	console.log(resourceJSON);
 	var songItems = resourceJSON['items'];
 	songsLoadNum += songItems.length;
 	var songNames = new Array();
