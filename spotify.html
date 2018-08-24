@@ -37,19 +37,20 @@
 	<!-- Navbar (sit on top) -->
 	<div class="w3-top">
 		<div class="w3-bar w3-white w3-card" id="myNavbar">
-			<a href="index.html" class="w3-bar-item w3-button w3-wide" id="btnHome">HOME</a>
+			<a href="index.html" class="w3-bar-item w3-button" id="btnHome"><i class="fa fa-home"></i><div class="w3-hide-small" style="display: inline"> HOME</div></a>
 			<!-- Right-sided navbar links -->
 			<div class="w3-right">
-				<a onclick="submitURL(document.getElementById('urlInput').value);" class="w3-bar-item w3-button" id="btnSearch"><i class="fa fa-search"></i> SEARCH</a>
+				<a onclick="submitURL(document.getElementById('urlInput').value);" class="w3-bar-item w3-button" id="btnSearch"><i class="fa fa-search"></i><div class="w3-hide-small" style="display: inline"> SEARCH</div></a>
 			</div>
-			<div class="w3-right" style="padding-top:6px; width:35%">
-				<input type="text" name="playlisturl" class="w3-input w3-border w3-round" placeholder="Playlist URL" id="urlInput">
+			<div class="w3-right" style="padding-top:6px; width:35%; min-width:280px">
+				<input type="text" name="playlisturl" onkeydown="search(this);" class="w3-input w3-border w3-round" placeholder="Playlist URL" id="urlInput">
 			</div>
 		</div>
 	</div>
 	
 	<div style="padding-top:60px">
-		<button id="btnSpotifyAuth" onclick="spotifyAuth()" class="w3-button w3-round w3-border w3-green" style="float: right; margin-right: 5%; margin-top: 1.6em;">Login with Spotify for full playlist</button>
+		<button id="btnSpotifyAuth" onclick="spotifyAuth()" class="w3-button w3-round w3-border w3-green w3-hide-small" style="float: right; margin-right: 5%; margin-top: 1.6em;">Login with Spotify for full playlist</button>
+		<div style="text-align: center; margin-top: 1em;"><button id="btnSpotifyAuthM" onclick="spotifyAuth()" class="w3-button w3-round w3-border w3-green w3-hide-medium w3-hide-large">Login with Spotify for full playlist</button></div>
 		<h1 style="text-align: center;">Spotify Playlist</h1>
 		<div id="content">
 			<div class="w3-responsive">
@@ -62,7 +63,7 @@
 					</tr>
 				</table>
 			</div>
-			<button id="btnDownloadAll" onclick="downloadAll()" class="w3-button w3-round w3-border w3-green" style="float: right; margin-right: 5%;" disabled>Download All</button>
+			<button id="btnDownloadAll" onclick="downloadAll()" class="w3-button w3-round w3-border w3-green" style="float: right; margin-right: 5%;" disabled><i class="fa fa-download"></i> Download All</button>
 		</div>
 	</div>
 	<p style="text-align: center; padding-bottom: 20px;">&nbsp;</p>

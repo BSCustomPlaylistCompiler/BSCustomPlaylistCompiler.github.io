@@ -1,3 +1,9 @@
+function search(ele) {
+    if(event.key === 'Enter') {
+        submitURL(ele.value);        
+    }
+}
+
 function submitURL(playlisturl) {
 	if (playlisturl.toLowerCase().includes('spotify.com')) {
 		window.location.href = 'spotify.html?playlisturl=' + encodeURIComponent(playlisturl);

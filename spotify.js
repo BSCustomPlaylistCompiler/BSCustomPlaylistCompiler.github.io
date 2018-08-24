@@ -9,21 +9,33 @@ var songsDownloaded = 0;
 window.onload = function() {
 	checkURL();
 	window.setTimeout(checkRefresh, 15000);
+	var searchBox = document.getElementById("urlInput");
+	input.addEventListener("keyup", function(event) {
+		event.preventDefault();
+		if (event.keyCode === 13) {
+			submitURL(document.getElementById('urlInput').value);
+		}
+	});
 };
+
+function search(ele) {
+    if(event.key === 'Enter') {
+        submitURL(ele.value);        
+    }
+}
+
+function checkRefresh() {
+	if (document.getElementById('songTable').rows.length == 1) {
+		console.log('reload');
+		location.reload();
+	}
+}
 
 function submitURL(playlisturl) {
 	if (playlisturl.toLowerCase().includes('spotify.com')) {
 		window.location.href = 'spotify.html?playlisturl=' + encodeURIComponent(playlisturl);
 	} else if (playlisturl.toLowerCase().includes('youtube.com')) {
 		window.location.href = 'youtube.html?playlisturl=' + encodeURIComponent(playlisturl);
-	}
-}
-
-
-function checkRefresh() {
-	if (document.getElementById('songTable').rows.length == 1) {
-		console.log('reload');
-		location.reload();
 	}
 }
 

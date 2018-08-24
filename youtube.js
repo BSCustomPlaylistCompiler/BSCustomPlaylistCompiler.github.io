@@ -4,8 +4,24 @@ var songsLoaded = 0;
 var songsEnabled = 0;
 var songsDownloaded = 0;
 var songsRequested = 0;
-getPlaylistHTML();
-window.setTimeout(checkRefresh, 15000);
+
+window.onload = function() {
+	getPlaylistHTML();
+	window.setTimeout(checkRefresh, 15000);
+	var searchBox = document.getElementById("urlInput");
+	input.addEventListener("keyup", function(event) {
+		event.preventDefault();
+		if (event.keyCode === 13) {
+			submitURL(document.getElementById('urlInput').value);
+		}
+	});
+};
+
+function search(ele) {
+    if(event.key === 'Enter') {
+        submitURL(ele.value);        
+    }
+}
 
 function checkRefresh() {
 	if (document.getElementById('songTable').rows.length == 1) {
@@ -21,7 +37,6 @@ function submitURL(playlisturl) {
 		window.location.href = 'youtube.html?playlisturl=' + encodeURIComponent(playlisturl);
 	}
 }
-
 
 function getURL() {
 	var origurl = decodeURIComponent(new URL(window.location.href).searchParams.get('playlisturl'));
