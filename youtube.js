@@ -7,7 +7,7 @@ var songsRequested = 0;
 
 window.onload = function() {
 	getPlaylistHTML();
-	window.setTimeout(checkRefresh, 15000);
+	//window.setTimeout(checkRefresh, 15000);
 };
 
 function enterURL(ele) {
@@ -52,13 +52,26 @@ function getPlaylistHTML() {
 				if (htmlFile.readyState === 4) {  // Makes sure the document is ready to parse.
 					if (htmlFile.status === 200) {  // Makes sure it's found the file.
 						var allText = htmlFile.responseText;
-						var myText = allText.split('["ytInitialData"] = ')[1].split('\n')[0];
-						myText = myText.slice(0, myText.length - 1)
+						var myText = '';
+						if (allText.split('["ytInitialData"] = ').length > 1) {
+							myText = allText.split('["ytInitialData"] = ')[1].split('\n')[0];
+							myText = myText.slice(0, myText.length - 1);
+						} else if (allText.split('<div id="initial-data"><!-- ').length > 1) {
+							myText = allText.split('<div id="initial-data"><!-- ')[1].split('\n')[0];
+							myText = myText.split(' -->')[0];
+						}
 						var resourceJSON = JSON.parse(myText);
-						var videoID = resourceJSON['contents']['twoColumnBrowseResultsRenderer']['tabs'][0]['tabRenderer']['content']['sectionListRenderer']['contents'][0]['itemSectionRenderer']['contents'][0]['playlistVideoListRenderer']['contents'][0]['playlistVideoRenderer']['videoId'];
-						var playlistID = resourceJSON['responseContext']['serviceTrackingParams'][1]['params'][0]['value'];
+						var videoID = null;
+						var playlistID = null;
+						if (resourceJSON['contents'].hasOwnProperty('twoColumnBrowseResultsRenderer')) {
+							videoID = resourceJSON['contents']['twoColumnBrowseResultsRenderer']['tabs'][0]['tabRenderer']['content']['sectionListRenderer']['contents'][0]['itemSectionRenderer']['contents'][0]['playlistVideoListRenderer']['contents'][0]['playlistVideoRenderer']['videoId'];
+							playlistID = resourceJSON['responseContext']['serviceTrackingParams'][1]['params'][0]['value'];
+						} else if (resourceJSON['contents'].hasOwnProperty('singleColumnBrowseResultsRenderer')) {
+							videoID = resourceJSON['contents']['singleColumnBrowseResultsRenderer']['tabs'][0]['tabRenderer']['content']['sectionListRenderer']['contents'][0]['itemSectionRenderer']['contents'][0]['playlistVideoListRenderer']['contents'][0]['playlistVideoRenderer']['videoId'];
+							playlistID = resourceJSON['responseContext']['serviceTrackingParams'][0]['params'][0]['value'];
+						}
 						playlistID = playlistID.slice(2, playlistID.length);
-						getVideoHTML('https://www.youtube.com/watch?v=' + videoID + '&list=' + playlistID + '&index=1&app=desktop&persist_app=1');
+						getVideoHTML('https://www.youtube.com/watch?v=' + videoID + '&list=' + playlistID);
 					} else {
 						getPlaylistHTML();
 					}
@@ -90,20 +103,50 @@ function getVideoHTML(videoURL) {
 }
 
 function getSongs(sourceHTML) {
-	var myText = sourceHTML.split('["ytInitialData"] = ')[1].split('\n')[0];
-	myText = myText.slice(0, myText.length - 1);
+	var myText = '';
+	if (sourceHTML.split('["ytInitialData"] = ').length > 1) {
+		myText = sourceHTML.split('["ytInitialData"] = ')[1].split('\n')[0];
+		myText = myText.slice(0, myText.length - 1);
+	} else if (sourceHTML.split('<div id="initial-data"><!-- ').length > 1) {
+		myText = sourceHTML.split('<div id="initial-data"><!-- ')[1].split('\n')[0];
+		myText = myText.split(' -->')[0];
+	}
 	var resourceJSON = JSON.parse(myText);
-	var playlistID = resourceJSON['contents']['twoColumnWatchNextResults']['playlist']['playlist']['playlistId'];
-	var playlistLength = parseInt(resourceJSON['contents']['twoColumnWatchNextResults']['playlist']['playlist']['totalVideos']);
-	var highestVisibleID = parseInt(resourceJSON['contents']['twoColumnWatchNextResults']['playlist']['playlist']['contents'][resourceJSON['contents']['twoColumnWatchNextResults']['playlist']['playlist']['contents'].length - 1]['playlistPanelVideoRenderer']['indexText']['simpleText']);
-	var highestVisibleVideoID = resourceJSON['contents']['twoColumnWatchNextResults']['playlist']['playlist']['contents'][resourceJSON['contents']['twoColumnWatchNextResults']['playlist']['playlist']['contents'].length - 1]['playlistPanelVideoRenderer']['videoId'];
-	var songItems = resourceJSON['contents']['twoColumnWatchNextResults']['playlist']['playlist']['contents'];
+	var playlistID = '';
+	var playlistLength = 0;
+	var highestVisibleID = 0;
+	var highestVisibleVideoID = '';
+	var songItems = null;
+	if (resourceJSON['contents'].hasOwnProperty('twoColumnWatchNextResults')) {
+		playlistID = resourceJSON['contents']['twoColumnWatchNextResults']['playlist']['playlist']['playlistId'];
+		playlistLength = parseInt(resourceJSON['contents']['twoColumnWatchNextResults']['playlist']['playlist']['totalVideos']);
+		highestVisibleID = parseInt(resourceJSON['contents']['twoColumnWatchNextResults']['playlist']['playlist']['contents'][resourceJSON['contents']['twoColumnWatchNextResults']['playlist']['playlist']['contents'].length - 1]['playlistPanelVideoRenderer']['indexText']['simpleText']);
+		highestVisibleVideoID = resourceJSON['contents']['twoColumnWatchNextResults']['playlist']['playlist']['contents'][resourceJSON['contents']['twoColumnWatchNextResults']['playlist']['playlist']['contents'].length - 1]['playlistPanelVideoRenderer']['videoId'];
+		songItems = resourceJSON['contents']['twoColumnWatchNextResults']['playlist']['playlist']['contents'];
+	} else if (resourceJSON['contents'].hasOwnProperty('singleColumnWatchNextResults')) {
+		playlistID = resourceJSON['contents']['singleColumnWatchNextResults']['playlist']['playlist']['playlistId'];
+		playlistLength = parseInt(resourceJSON['contents']['singleColumnWatchNextResults']['playlist']['playlist']['totalVideosText']['runs'][0]['text'].split(' ')[0]);
+		highestVisibleID = parseInt(resourceJSON['contents']['singleColumnWatchNextResults']['playlist']['playlist']['contents'][resourceJSON['contents']['singleColumnWatchNextResults']['playlist']['playlist']['contents'].length - 1]['playlistPanelVideoRenderer']['indexText']['runs'][0]['text']);
+		highestVisibleVideoID = resourceJSON['contents']['singleColumnWatchNextResults']['playlist']['playlist']['contents'][resourceJSON['contents']['singleColumnWatchNextResults']['playlist']['playlist']['contents'].length - 1]['playlistPanelVideoRenderer']['videoId'];
+		songItems = resourceJSON['contents']['singleColumnWatchNextResults']['playlist']['playlist']['contents'];
+	}
 	var songNames = new Array();
 	var songArtists = new Array();
 	for (songItem in songItems) {
 		try {
-			if (parseInt(songItems[songItem]['playlistPanelVideoRenderer']['indexText']['simpleText']) > songsRequested || songItems[songItem]['playlistPanelVideoRenderer']['indexText']['simpleText'] == '▶') {
-				var simpleText = songItems[songItem]['playlistPanelVideoRenderer']['title']['simpleText'];
+			var myIndex = 0;
+			if (resourceJSON['contents'].hasOwnProperty('twoColumnWatchNextResults')) {
+				myIndex = parseInt(songItems[songItem]['playlistPanelVideoRenderer']['indexText']['simpleText']);
+			} else if (resourceJSON['contents'].hasOwnProperty('singleColumnWatchNextResults')) {
+				myIndex = parseInt(songItems[songItem]['playlistPanelVideoRenderer']['indexText']['runs'][0]['text']);
+			}
+			if (myIndex > songsRequested || myIndex == '▶') {
+				var simpleText = '';
+				if (resourceJSON['contents'].hasOwnProperty('twoColumnWatchNextResults')) {
+					simpleText = songItems[songItem]['playlistPanelVideoRenderer']['title']['simpleText'];
+				} else if (resourceJSON['contents'].hasOwnProperty('singleColumnWatchNextResults')) {
+					simpleText = songItems[songItem]['playlistPanelVideoRenderer']['title']['runs'][0]['text'];
+				}
 				if (simpleText.startsWith('[')) {
 				simpleText = simpleText.split(']').slice(1).join(']').trim();
 				}
@@ -172,7 +215,7 @@ function getSongs(sourceHTML) {
 	}
 	songsRequested = highestVisibleID;
 	if (playlistLength > highestVisibleID) {
-		getVideoHTML('https://www.youtube.com/watch?v=' + highestVisibleVideoID + '&list=' + playlistID + '&index=' + highestVisibleID + '&app=desktop&persist_app=1');
+		getVideoHTML('https://www.youtube.com/watch?v=' + highestVisibleVideoID + '&list=' + playlistID + '&index=' + highestVisibleID);
 	}
 }
 
