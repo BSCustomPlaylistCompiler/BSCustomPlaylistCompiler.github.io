@@ -58,7 +58,7 @@ function getPlaylistHTML() {
 						var videoID = resourceJSON['contents']['twoColumnBrowseResultsRenderer']['tabs'][0]['tabRenderer']['content']['sectionListRenderer']['contents'][0]['itemSectionRenderer']['contents'][0]['playlistVideoListRenderer']['contents'][0]['playlistVideoRenderer']['videoId'];
 						var playlistID = resourceJSON['responseContext']['serviceTrackingParams'][1]['params'][0]['value'];
 						playlistID = playlistID.slice(2, playlistID.length);
-						getVideoHTML('https://www.youtube.com/watch?v=' + videoID + '&list=' + playlistID + '&index=1');
+						getVideoHTML('https://www.youtube.com/watch?v=' + videoID + '&list=' + playlistID + '&index=1&app=desktop&persist_app=1');
 					} else {
 						getPlaylistHTML();
 					}
@@ -172,7 +172,7 @@ function getSongs(sourceHTML) {
 	}
 	songsRequested = highestVisibleID;
 	if (playlistLength > highestVisibleID) {
-		getVideoHTML('https://www.youtube.com/watch?v=' + highestVisibleVideoID + '&list=' + playlistID + '&index=' + highestVisibleID);
+		getVideoHTML('https://www.youtube.com/watch?v=' + highestVisibleVideoID + '&list=' + playlistID + '&index=' + highestVisibleID + '&app=desktop&persist_app=1');
 	}
 }
 
