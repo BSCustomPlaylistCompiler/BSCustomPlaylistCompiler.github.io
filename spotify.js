@@ -30,7 +30,7 @@ function checkURL() {
 	if (window.location.href.includes('playlisturl=')) {
 		var origurl = decodeURIComponent(new URL(window.location.href).searchParams.get('playlisturl'));
 		playlisturl = origurl.slice(0, origurl.indexOf('spotify.com/')) + 'spotify.com/embed/' + origurl.slice(origurl.indexOf('spotify.com/') + 12, origurl.length);
-		getPlaylistHTML();
+		getPlaylistHTML(false);
 	} else if (window.location.href.includes('access_token=')) {
 		document.getElementById('btnSpotifyAuth').style.display = 'none';
 		document.getElementById('divBtnSpotifyAuthM').style.display = 'none';
@@ -54,7 +54,7 @@ function spotifyAuth() {
 	window.location.href = 'https://accounts.spotify.com/authorize?client_id=9ada7451c6074f77a81609aacde7efb8&response_type=token&redirect_uri=' + encodeURIComponent(window.location.href.split('?')[0]) + '&state=' + encodeURIComponent(new URL(window.location.href).searchParams.get('playlisturl')) + '&scope=playlist-read-collaborative%20playlist-read-private';
 }
 
-function getPlaylistHTML() {
+function getPlaylistHTML(loggedIn) {
 	myURL = playlisturl;
 	var htmlFile = new XMLHttpRequest();
 	htmlFile.open('GET', 'https://cors.io/?' + myURL, true);
@@ -62,16 +62,28 @@ function getPlaylistHTML() {
 		if (htmlFile.readyState === 4) {  // Makes sure the document is ready to parse.
 			if (htmlFile.status === 200) {  // Makes sure it's found the file.
 				var allText = htmlFile.responseText;
-				getSongs(allText, false, 0, myURL);
+				if (loggedIn) {
+					var infoJSON = JSON.parse(sourceText);
+					setPlaylistInfo(infoJSON);
+				} else {
+					getSongs(allText, false, 0, myURL);
+				}
 			} else {
-				getPlaylistHTML();
+				getPlaylistHTML(loggedIn);
 			}
 		}
 	};
 	htmlFile.send(null);
 }
 
+function setPlaylistInfo(infoJSON) {
+	playlistName = infoJSON['name'];
+	playlistOwner = infoJSON['owner']['display_name'];
+	document.getElementById('playlistInfo').innerText = 'Playlist - "' + playlistName + '" Owner - "' + playlistOwner + '"';
+}
+
 function getAPIJSON(myURL, offset) {
+	getPlaylistHTML(true);
 	var jsonFile = new XMLHttpRequest();
 	var myPlaylistID = decodeURIComponent(myURL.searchParams.get('state'));
 	jsonFile.overrideMimeType('application/json');
@@ -99,16 +111,12 @@ function getSongs(sourceText, loggedIn, offset, myURL) {
 		} else if (JSON.parse(sourceText).hasOwnProperty('items')) {
 			resourceJSON = JSON.parse(sourceText);
 		}
-		infoJSON = JSON.parse(sourceText);
 	} else {
 		var doc = new DOMParser().parseFromString(sourceText, 'text/html');
 		resourceJSON = JSON.parse(doc.getElementById('resource').innerText)['tracks'];
 		infoJSON = JSON.parse(doc.getElementById('resource').innerText);
+		setPlaylistInfo(infoJSON);
 	}
-	console.log(JSON.stringify(infoJSON));
-	playlistName = infoJSON['name'];
-	playlistOwner = infoJSON['owner']['display_name'];
-	document.getElementById('playlistInfo').innerText = 'Playlist - "' + playlistName + '" Owner - "' + playlistOwner + '"';
 	songsListNum = parseInt(resourceJSON['total']);
 	var songItems = resourceJSON['items'];
 	songsLoadNum += songItems.length;
