@@ -8,7 +8,7 @@ var songsDownloaded = 0;
 
 window.onload = function() {
 	checkURL();
-	window.setTimeout(checkRefresh, 15000);
+	//window.setTimeout(checkRefresh, 15000);
 };
 
 function enterURL(ele) {
@@ -94,6 +94,8 @@ function getSongs(sourceText, loggedIn, offset, myURL) {
 	var resourceJSON = null;
 	if (loggedIn) {
 		resourceJSON = JSON.parse(sourceText)['tracks'];
+		console.log(sourceText);
+		console.log(resourceJSON);
 	} else {
 		var doc = new DOMParser().parseFromString(sourceText, 'text/html');
 		resourceJSON = JSON.parse(doc.getElementById('resource').innerText)['tracks'];
