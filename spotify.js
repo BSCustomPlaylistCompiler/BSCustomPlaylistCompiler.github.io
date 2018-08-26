@@ -35,7 +35,8 @@ function checkURL() {
 		document.getElementById('btnSpotifyAuth').style.display = 'none';
 		document.getElementById('divBtnSpotifyAuthM').style.display = 'none';
 		document.getElementById('title').style.paddingRight = '0px';
-		playlisturl = decodeURIComponent(new URL(window.location.href.toString().replace(/#/g, '?')).searchParams.get('state'));
+		var origurl = decodeURIComponent(new URL(window.location.href.toString().replace(/#/g, '?')).searchParams.get('state'));
+		playlisturl = origurl.slice(0, origurl.indexOf('spotify.com/')) + 'spotify.com/embed/' + origurl.slice(origurl.indexOf('spotify.com/') + 12, origurl.length);
 		getAPIJSON(new URL(window.location.href.toString().replace(/#/g, '?')), 0);
 	} else if (window.location.href.includes('error=access_denied')) {
 		document.getElementById('btnSpotifyAuth').style.display = 'none';
@@ -63,10 +64,7 @@ function getPlaylistHTML(loggedIn) {
 			if (htmlFile.status === 200) {  // Makes sure it's found the file.
 				var allText = htmlFile.responseText;
 				if (loggedIn) {
-					var doc = new DOMParser().parseFromString(allText, 'text/html');
-					console.log(doc);
-					var infoJSON = JSON.parse(doc.getElementById('resource').innerText);
-					setPlaylistInfo(infoJSON);
+					loggedInSetInfo(allText);
 				} else {
 					getSongs(allText, false, 0, myURL);
 				}
@@ -78,7 +76,8 @@ function getPlaylistHTML(loggedIn) {
 	htmlFile.send(null);
 }
 
-function setPlaylistInfo(infoJSON) {
+function loggedInSetInfo(sourceText) {
+	var infoJSON = JSON.parse(sourceText);
 	playlistName = infoJSON['name'];
 	playlistOwner = infoJSON['owner']['display_name'];
 	document.getElementById('playlistInfo').innerText = 'Playlist - "' + playlistName + '" Owner - "' + playlistOwner + '"';
@@ -117,7 +116,9 @@ function getSongs(sourceText, loggedIn, offset, myURL) {
 		var doc = new DOMParser().parseFromString(sourceText, 'text/html');
 		resourceJSON = JSON.parse(doc.getElementById('resource').innerText)['tracks'];
 		infoJSON = JSON.parse(doc.getElementById('resource').innerText);
-		setPlaylistInfo(infoJSON);
+		playlistName = infoJSON['name'];
+		playlistOwner = infoJSON['owner']['display_name'];
+		document.getElementById('playlistInfo').innerText = 'Playlist - "' + playlistName + '" Owner - "' + playlistOwner + '"';
 	}
 	songsListNum = parseInt(resourceJSON['total']);
 	var songItems = resourceJSON['items'];
