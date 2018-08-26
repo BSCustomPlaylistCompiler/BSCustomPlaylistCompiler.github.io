@@ -93,9 +93,11 @@ function getAPIJSON(myURL, offset) {
 function getSongs(sourceText, loggedIn, offset, myURL) {
 	var resourceJSON = null;
 	if (loggedIn) {
-		resourceJSON = JSON.parse(sourceText)['tracks'];
-		console.log(sourceText);
-		console.log(resourceJSON);
+		if (JSON.parse(sourceText).hasOwnProperty('tracks')) {
+			resourceJSON = JSON.parse(sourceText)['tracks'];
+		} else if (JSON.parse(sourceText).hasOwnProperty('items')) {
+			resourceJSON = JSON.parse(sourceText);
+		}
 	} else {
 		var doc = new DOMParser().parseFromString(sourceText, 'text/html');
 		resourceJSON = JSON.parse(doc.getElementById('resource').innerText)['tracks'];
