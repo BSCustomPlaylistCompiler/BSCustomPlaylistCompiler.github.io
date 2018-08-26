@@ -50,6 +50,7 @@
 	
 	<div style="padding-top:60px">
 		<h1 style="text-align: center;">Youtube Playlist</h1>
+		<h3 id="playlistInfo" style="text-align: center;">Playlist - "" Owner - ""</h3>
 		<div id="content">
 			<div id="alertSpace"></div>
 			<div class="w3-responsive">
@@ -62,7 +63,8 @@
 					</tr>
 				</table>
 			</div>
-			<button id="btnDownloadAll" onclick="downloadAll()" class="w3-button w3-round w3-border w3-red" style="float: right; margin-right: 5%;"><i class="fa fa-download"></i> Download All</button>
+			<button id="btnDownloadAll" onclick="downloadAll()" class="w3-button w3-round w3-border w3-red" style="float: right; margin-right: 5%;" disabled><i class="fa fa-download"></i> Download All</button>
+			<button id="btnDownloadBeatDrop" onclick="downloadBeatDrop()" class="w3-button w3-round w3-border w3-red" style="float: right; margin-right: 3px;" disabled><i class="fa fa-download"></i> Download BeatDrop</button>
 		</div>
 	</div>
 	<p style="text-align: center; padding-bottom: 20px;">&nbsp;</p>
