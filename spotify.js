@@ -63,7 +63,7 @@ function getPlaylistHTML(loggedIn) {
 			if (htmlFile.status === 200) {  // Makes sure it's found the file.
 				var allText = htmlFile.responseText;
 				if (loggedIn) {
-					var infoJSON = JSON.parse(sourceText);
+					var infoJSON = JSON.parse(allText);
 					setPlaylistInfo(infoJSON);
 				} else {
 					getSongs(allText, false, 0, myURL);
