@@ -64,6 +64,7 @@ function getPlaylistHTML(loggedIn) {
 				var allText = htmlFile.responseText;
 				if (loggedIn) {
 					var doc = new DOMParser().parseFromString(allText, 'text/html');
+					console.log(doc);
 					var infoJSON = JSON.parse(doc.getElementById('resource').innerText);
 					setPlaylistInfo(infoJSON);
 				} else {
