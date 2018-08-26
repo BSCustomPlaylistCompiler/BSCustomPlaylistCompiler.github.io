@@ -99,7 +99,7 @@ function getSongs(sourceText, loggedIn, offset, myURL) {
 		} else if (JSON.parse(sourceText).hasOwnProperty('items')) {
 			resourceJSON = JSON.parse(sourceText);
 		}
-		infoJSONJSON = JSON.parse(sourceText);
+		infoJSON = JSON.parse(sourceText);
 	} else {
 		var doc = new DOMParser().parseFromString(sourceText, 'text/html');
 		resourceJSON = JSON.parse(doc.getElementById('resource').innerText)['tracks'];
