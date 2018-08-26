@@ -79,7 +79,8 @@ function getPlaylistHTML(loggedIn) {
 function loggedInSetInfo(sourceText) {
 	console.log(sourceText);
 	var doc = new DOMParser().parseFromString(sourceText, 'text/html');
-	var infoJSON = JSON.parse(doc.getElementById('resource').innerText);infoJSON = JSON.parse(sourceText);
+	console.log(doc.getElementById('resource').innerText);
+	var infoJSON = JSON.parse(doc.getElementById('resource').innerText);
 	console.log(infoJSON);
 	playlistName = infoJSON['name'];
 	playlistOwner = infoJSON['owner']['display_name'];
@@ -87,7 +88,9 @@ function loggedInSetInfo(sourceText) {
 }
 
 function getAPIJSON(myURL, offset) {
-	getPlaylistHTML(true);
+	if (offset == 0) {
+		getPlaylistHTML(true);
+	}
 	var jsonFile = new XMLHttpRequest();
 	var myPlaylistID = decodeURIComponent(myURL.searchParams.get('state'));
 	jsonFile.overrideMimeType('application/json');
