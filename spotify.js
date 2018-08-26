@@ -8,7 +8,6 @@ var songsDownloaded = 0;
 
 window.onload = function() {
 	checkURL();
-	//window.setTimeout(checkRefresh, 15000);
 };
 
 function enterURL(ele) {
@@ -22,13 +21,6 @@ function submitURL(playlisturl) {
 		window.location.href = 'spotify.html?playlisturl=' + encodeURIComponent(playlisturl);
 	} else if (playlisturl.toLowerCase().includes('youtube.com')) {
 		window.location.href = 'youtube.html?playlisturl=' + encodeURIComponent(playlisturl);
-	}
-}
-
-function checkRefresh() {
-	if (document.getElementById('songTable').rows.length == 1) {
-		console.log('reload');
-		location.reload();
 	}
 }
 
