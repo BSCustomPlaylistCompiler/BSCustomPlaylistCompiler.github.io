@@ -34,15 +34,18 @@ function checkURL() {
 	} else if (window.location.href.includes('access_token=')) {
 		document.getElementById('btnSpotifyAuth').style.display = 'none';
 		document.getElementById('divBtnSpotifyAuthM').style.display = 'none';
+		document.getElementById('title').style.paddingRight = '0px';
 		playlisturl = decodeURIComponent(new URL(window.location.href.toString().replace(/#/g, '?')).searchParams.get('state'));
 		getAPIJSON(new URL(window.location.href.toString().replace(/#/g, '?')), 0);
 	} else if (window.location.href.includes('error=access_denied')) {
 		document.getElementById('btnSpotifyAuth').style.display = 'none';
 		document.getElementById('divBtnSpotifyAuthM').style.display = 'none';
+		document.getElementById('title').style.paddingRight = '0px';
 		document.getElementById('alertSpace').innerHTML = '<div class="w3-panel w3-red w3-card-4 w3-display-container" style="width:90%; margin-left:5%;"><span onclick="this.parentElement.style.display=\'none\'"class="w3-button w3-display-topright">&times;</span><h3>Warning!</h3><p>Spotify Authentication Error.</p></div>';
 	} else {
 		document.getElementById('btnSpotifyAuth').style.display = 'none';
 		document.getElementById('divBtnSpotifyAuthM').style.display = 'none';
+		document.getElementById('title').style.paddingRight = '0px';
 		document.getElementById('alertSpace').innerHTML = '<div class="w3-panel w3-red w3-card-4 w3-display-container" style="width:90%; margin-left:5%;"><span onclick="this.parentElement.style.display=\'none\'"class="w3-button w3-display-topright">&times;</span><h3>Warning!</h3><p>No playlist URL was detected.</p></div>';
 	}
 }
@@ -102,10 +105,10 @@ function getSongs(sourceText, loggedIn, offset, myURL) {
 		resourceJSON = JSON.parse(doc.getElementById('resource').innerText)['tracks'];
 		infoJSON = JSON.parse(doc.getElementById('resource').innerText);
 	}
+	console.log(JSON.stringify(infoJSON));
 	playlistName = infoJSON['name'];
 	playlistOwner = infoJSON['owner']['display_name'];
 	document.getElementById('playlistInfo').innerText = 'Playlist - "' + playlistName + '" Owner - "' + playlistOwner + '"';
-	console.log(JSON.stringify(infoJSON));
 	songsListNum = parseInt(resourceJSON['total']);
 	var songItems = resourceJSON['items'];
 	songsLoadNum += songItems.length;
