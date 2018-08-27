@@ -35,7 +35,8 @@ function checkURL() {
 	} else if (window.location.href.includes('access_token=')) {
 		document.getElementById('btnSpotifyAuth').style.display = 'none';
 		document.getElementById('divBtnSpotifyAuthM').style.display = 'none';
-		document.getElementById('title').style.paddingRight = '0px';
+		document.getElementById('songsInfo').style.paddingRight = '0px';
+		document.getElementById('downloadInfo').style.paddingRight = '0px';
 		var origurl = decodeURIComponent(new URL(window.location.href.toString().replace(/#/g, '?')).searchParams.get('state'));
 		playlisturl = origurl.slice(0, origurl.indexOf('spotify.com/')) + 'spotify.com/embed/' + origurl.slice(origurl.indexOf('spotify.com/') + 12, origurl.length);
 		getAPIJSON(new URL(window.location.href.toString().replace(/#/g, '?')), 0);
@@ -43,11 +44,15 @@ function checkURL() {
 		document.getElementById('btnSpotifyAuth').style.display = 'none';
 		document.getElementById('divBtnSpotifyAuthM').style.display = 'none';
 		document.getElementById('title').style.paddingRight = '0px';
+		document.getElementById('songsInfo').style.paddingRight = '0px';
+		document.getElementById('downloadInfo').style.paddingRight = '0px';
 		document.getElementById('alertSpace').innerHTML = '<div class="w3-panel w3-red w3-card-4 w3-display-container" style="width:90%; margin-left:5%;"><span onclick="this.parentElement.style.display=\'none\'"class="w3-button w3-display-topright">&times;</span><h3>Warning!</h3><p>Spotify Authentication Error.</p></div>';
 	} else {
 		document.getElementById('btnSpotifyAuth').style.display = 'none';
 		document.getElementById('divBtnSpotifyAuthM').style.display = 'none';
 		document.getElementById('title').style.paddingRight = '0px';
+		document.getElementById('songsInfo').style.paddingRight = '0px';
+		document.getElementById('downloadInfo').style.paddingRight = '0px';
 		document.getElementById('alertSpace').innerHTML = '<div class="w3-panel w3-red w3-card-4 w3-display-container" style="width:90%; margin-left:5%;"><span onclick="this.parentElement.style.display=\'none\'"class="w3-button w3-display-topright">&times;</span><h3>Warning!</h3><p>No playlist URL was detected.</p></div>';
 	}
 }
@@ -128,6 +133,7 @@ function getSongs(sourceText, loggedIn, offset, myURL) {
 	var songItems = resourceJSON['items'];
 	songsLoadNum += songItems.length;
 	document.getElementById('songsInfo').innerText = 'Songs Loaded - ' + songsLoaded + '/' + songsLoadNum;
+	document.getElementById('songsInfoM').innerText = 'Songs Loaded - ' + songsLoaded + '/' + songsLoadNum;
 	var songNames = new Array();
 	var songArtists = new Array();
 	for (songItem in songItems) {
@@ -231,6 +237,7 @@ function displaySong(beatsaverHTML, songName, songArtist) {
 	updateDownloads();
 	songsLoaded += 1;
 	document.getElementById('songsInfo').innerText = 'Songs Loaded - ' + songsLoaded + '/' + songsListNum;
+	document.getElementById('songsInfoM').innerText = 'Songs Loaded - ' + songsLoaded + '/' + songsLoadNum;
 	if (songsLoaded >= songsLoadNum) {
 		document.getElementById('btnDownloadAll').disabled = false;
 		document.getElementById('btnDownloadBeatDrop').disabled = false;
@@ -293,6 +300,7 @@ function downloadAll() {
 		}
 	}
 	document.getElementById('downloadInfo').innerText = 'Songs Downloaded - ' + songsDownloaded + '/' + songsToDownload;
+	document.getElementById('downloadInfoM').innerText = 'Songs Downloaded - ' + songsDownloaded + '/' + songsToDownload;
 	for (arrRow in table.rows) {
 		if (arrRow != 0) {
 			var myRow = table.rows[arrRow];
@@ -318,6 +326,7 @@ function downloadSong(bsSongID) {
 		playlistZip.file(bsSongID + '.zip', arrBuff);
 		songsDownloaded += 1;
 		document.getElementById('downloadInfo').innerText = 'Songs Downloaded - ' + songsDownloaded + '/' + songsToDownload;
+		document.getElementById('downloadInfoM').innerText = 'Songs Downloaded - ' + songsDownloaded + '/' + songsToDownload;
 		if (songsDownloaded >= songsEnabled) {
 			playlistZip.generateAsync({type:'blob'}).then(function (blob) {
 				saveAs(blob, playlistName.replace(/[^a-zA-Z0-9]/g, '').trim() + '.zip');
@@ -331,6 +340,7 @@ function downloadSong(bsSongID) {
 					}
 				}
 				document.getElementById('downloadInfo').innerText = 'Songs Downloaded - Not Downloading';
+				document.getElementById('downloadInfoM').innerText = 'Songs Downloaded - Not Downloading';
 			}, function (err) {
 				console.log(err);
 			});
@@ -353,6 +363,7 @@ function downloadBeatDrop() {
 		}
 	}
 	document.getElementById('downloadInfo').innerText = 'Songs Downloaded - 0/1';
+	document.getElementById('downloadInfoM').innerText = 'Songs Downloaded - 0/1';
 	var beatDropJSON = JSON.parse("{}");
 	beatDropJSON['playlistTitle'] = playlistName;
 	beatDropJSON['playlistAuthor'] = playlistOwner;
@@ -381,6 +392,7 @@ function downloadBeatDrop() {
 	myFile.click();
 	document.body.removeChild(myFile);
 	document.getElementById('downloadInfo').innerText = 'Songs Downloaded - 1/1';
+	document.getElementById('downloadInfoM').innerText = 'Songs Downloaded - 1/1';
 	document.getElementById('btnDownloadAll').disabled = false;
 	document.getElementById('btnDownloadBeatDrop').disabled = false;
 	for (rowID in document.getElementById('songTable').rows) {
@@ -391,4 +403,5 @@ function downloadBeatDrop() {
 		}
 	}
 	document.getElementById('downloadInfo').innerText = 'Songs Downloaded - Not Downloading';
+	document.getElementById('downloadInfoM').innerText = 'Songs Downloaded - Not Downloading';
 }
