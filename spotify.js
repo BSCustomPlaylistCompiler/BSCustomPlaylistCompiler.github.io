@@ -35,6 +35,7 @@ function checkURL() {
 	} else if (window.location.href.includes('access_token=')) {
 		document.getElementById('btnSpotifyAuth').style.display = 'none';
 		document.getElementById('divBtnSpotifyAuthM').style.display = 'none';
+		document.getElementById('title').style.paddingRight = '0px';
 		document.getElementById('songsInfo').style.paddingRight = '0px';
 		document.getElementById('downloadInfo').style.paddingRight = '0px';
 		var origurl = decodeURIComponent(new URL(window.location.href.toString().replace(/#/g, '?')).searchParams.get('state'));
