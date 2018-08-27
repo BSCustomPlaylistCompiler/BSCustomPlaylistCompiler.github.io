@@ -7,6 +7,7 @@ var songsLoadNum = 0;
 var songsListNum = 0;
 var songsEnabled = 0;
 var songsDownloaded = 0;
+var songsToDownload = 0;
 
 window.onload = function() {
 	checkURL();
@@ -121,11 +122,12 @@ function getSongs(sourceText, loggedIn, offset, myURL) {
 		infoJSON = JSON.parse(doc.getElementById('resource').innerText);
 		playlistName = infoJSON['name'];
 		playlistOwner = infoJSON['owner']['display_name'];
-		document.getElementById('playlistInfo').innerText = 'Playlist - "' + playlistName + '" Owner - "' + playlistOwner + '"';
+		document.getElementById('playlistInfo').innerText = 'Playlist - "' + playlistName + '" Owner - "' + playlistOwner + '"';
 	}
 	songsListNum = parseInt(resourceJSON['total']);
 	var songItems = resourceJSON['items'];
 	songsLoadNum += songItems.length;
+	document.getElementById('songsInfo').innerText = 'Songs Loaded - ' + songsLoaded + '/' + songsLoadNum;
 	var songNames = new Array();
 	var songArtists = new Array();
 	for (songItem in songItems) {
@@ -228,6 +230,7 @@ function displaySong(beatsaverHTML, songName, songArtist) {
 	}
 	updateDownloads();
 	songsLoaded += 1;
+	document.getElementById('songsInfo').innerText = 'Songs Loaded - ' + songsLoaded + '/' + songsListNum;
 	if (songsLoaded >= songsLoadNum) {
 		document.getElementById('btnDownloadAll').disabled = false;
 		document.getElementById('btnDownloadBeatDrop').disabled = false;
@@ -275,8 +278,21 @@ function downloadAll() {
 		}
 	}
 	alert('Download Started - Compiling may take a few minutes...');
+	songsToDownload = 0;
 	songsDownloaded = 0;
 	var table = document.getElementById('songTable');
+	for (arrRow in table.rows) {
+		if (arrRow != 0) {
+			var bsSongID = '';
+			try {
+				bsSongID = table.rows[arrRow].cells[3].innerText;
+			} catch (err) {}
+			if (bsSongID != 'N/A') {
+				songsToDownload += 1;
+			}
+		}
+	}
+	document.getElementById('downloadInfo').innerText = 'Songs Downloaded - ' + songsDownloaded + '/' + songsToDownload;
 	for (arrRow in table.rows) {
 		if (arrRow != 0) {
 			var myRow = table.rows[arrRow];
@@ -301,9 +317,10 @@ function downloadSong(bsSongID) {
 		var arrBuff = xhr.response;
 		playlistZip.file(bsSongID + '.zip', arrBuff);
 		songsDownloaded += 1;
+		document.getElementById('downloadInfo').innerText = 'Songs Downloaded - ' + songsDownloaded + '/' + songsToDownload;
 		if (songsDownloaded >= songsEnabled) {
 			playlistZip.generateAsync({type:'blob'}).then(function (blob) {
-				saveAs(blob, "BeatSaverPlaylist.zip");
+				saveAs(blob, playlistName.replace(/[^a-zA-Z0-9]/g, '').trim() + '.zip');
 				document.getElementById('btnDownloadAll').disabled = false;
 				document.getElementById('btnDownloadBeatDrop').disabled = false;
 				for (rowID in document.getElementById('songTable').rows) {
@@ -313,6 +330,7 @@ function downloadSong(bsSongID) {
 						} catch (err) {}
 					}
 				}
+				document.getElementById('downloadInfo').innerText = 'Songs Downloaded - Not Downloading';
 			}, function (err) {
 				console.log(err);
 			});
@@ -325,6 +343,16 @@ function downloadSong(bsSongID) {
 }
 
 function downloadBeatDrop() {
+	document.getElementById('btnDownloadAll').disabled = true;
+	document.getElementById('btnDownloadBeatDrop').disabled = true;
+	for (rowID in document.getElementById('songTable').rows) {
+		if (rowID != 0) {
+			try {
+				document.getElementById('songTable').rows[rowID].cells[2].getElementsByTagName('select')[0].disabled = true;
+			} catch (err) {}
+		}
+	}
+	document.getElementById('downloadInfo').innerText = 'Songs Downloaded - 0/1';
 	var beatDropJSON = JSON.parse("{}");
 	beatDropJSON['playlistTitle'] = playlistName;
 	beatDropJSON['playlistAuthor'] = playlistOwner;
@@ -352,4 +380,15 @@ function downloadBeatDrop() {
 	document.body.appendChild(myFile);
 	myFile.click();
 	document.body.removeChild(myFile);
+	document.getElementById('downloadInfo').innerText = 'Songs Downloaded - 1/1';
+	document.getElementById('btnDownloadAll').disabled = false;
+	document.getElementById('btnDownloadBeatDrop').disabled = false;
+	for (rowID in document.getElementById('songTable').rows) {
+		if (rowID != 0) {
+			try {
+				document.getElementById('songTable').rows[rowID].cells[2].getElementsByTagName('select')[0].disabled = false;
+			} catch (err) {}
+		}
+	}
+	document.getElementById('downloadInfo').innerText = 'Songs Downloaded - Not Downloading';
 }

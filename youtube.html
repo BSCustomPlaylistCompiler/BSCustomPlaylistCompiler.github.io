@@ -31,30 +31,43 @@
 		.w3-bar .w3-button {
 			padding: 16px;
 		}
+		.table-hover tbody tr:hover td {
+			background-color: DarkslateGrey;
+		}
+		tr:nth-child(even) {
+			color: #ffffff;
+			background-color: #333333;
+		}
+		tr:nth-child(odd) {
+			color: #ffffff;
+			background-color: #222222;
+		}
 	</style>
 </head>
-<body>
+<body bgcolor="black">
 	<!-- Navbar (sit on top) -->
 	<div class="w3-top">
-		<div class="w3-bar w3-white w3-card" id="myNavbar">
-			<a href="index.html" class="w3-bar-item w3-button" id="btnHome"><i class="fa fa-home"></i><div class="w3-hide-small" style="display: inline"> HOME</div></a>
+		<div class="w3-bar w3-black w3-card" id="myNavbar">
+			<a href="index.html" class="w3-bar-item w3-button w3-hover-dark-gray" id="btnHome"><i class="fa fa-home fa-inverse"></i><div class="w3-hide-small" style="display: inline"> HOME</div></a>
 			<!-- Right-sided navbar links -->
 			<div class="w3-right">
-				<a onclick="submitURL(document.getElementById('urlInput').value);" class="w3-bar-item w3-button" id="btnSearch"><i class="fa fa-search"></i><div class="w3-hide-small" style="display: inline"> SEARCH</div></a>
+				<a onclick="submitURL(document.getElementById('urlInput').value);" class="w3-bar-item w3-button w3-hover-dark-grey" id="btnSearch"><i class="fa fa-search fa-inverse"></i><div class="w3-hide-small" style="display: inline"> SEARCH</div></a>
 			</div>
 			<div class="w3-right" style="padding-top:6px; width:35%; min-width:210px">
-				<input type="text" name="playlisturl" onkeydown="enterURL(this);" class="w3-input w3-border w3-round" placeholder="Playlist URL" id="urlInput">
+				<input type="text" name="playlisturl" onkeydown="enterURL(this);" class="w3-input w3-round w3-light-grey" placeholder="Playlist URL" id="urlInput">
 			</div>
 		</div>
 	</div>
 	
-	<div style="padding-top:60px">
-		<h1 id="title" style="text-align: center;">Youtube Playlist</h1>
-		<h3 id="playlistInfo" style="text-align: center;">Playlist - "" Owner - ""</h3>
+	<div style="padding-top:60px" class="w3-black">
+		<h1 id="title" class="w3-text-white" style="text-align: center;">Youtube Playlist</h1>
+		<h3 id="songsInfo" class="w3-text-white" style="text-align: center;">Songs Loaded - /</h3>
+		<h3 id="downloadInfo" class="w3-text-white" style="text-align: center;">Songs Downloaded - Not Downloading</h3>
+		<h3 id="playlistInfo" class="w3-text-white" style="text-align: center;">Playlist - "" Owner - ""</h3>
 		<div id="content">
 			<div id="alertSpace"></div>
 			<div class="w3-responsive">
-				<table id="songTable" class="w3-table w3-striped w3-border w3-hoverable" style="margin: 1em auto; text-align: left-side; width:90%">
+				<table id="songTable" class="w3-table table-hover" style="margin: 1em auto; text-align: left-side; width:90%">
 					<tr class="w3-red">
 						<th>Song</th>
 						<th>Artist</th> 
@@ -63,8 +76,8 @@
 					</tr>
 				</table>
 			</div>
-			<button id="btnDownloadAll" onclick="downloadAll()" class="w3-button w3-round w3-border w3-red" style="float: right; margin-right: 5%;" disabled><i class="fa fa-download"></i> Download All</button>
-			<button id="btnDownloadBeatDrop" onclick="downloadBeatDrop()" class="w3-button w3-round w3-border w3-red" style="float: right; margin-right: 3px;" disabled><i class="fa fa-download"></i> Download BeatDrop</button>
+			<button id="btnDownloadAll" onclick="downloadAll()" class="w3-button w3-round w3-red w3-hover-dark-grey" style="float: right; margin-right: 5%;" disabled><i class="fa fa-download"></i> Download All</button>
+			<button id="btnDownloadBeatDrop" onclick="downloadBeatDrop()" class="w3-button w3-round w3-red w3-hover-dark-grey" style="float: right; margin-right: 3px;" disabled><i class="fa fa-download"></i> Download BeatDrop</button>
 		</div>
 	</div>
 	<p style="text-align: center; padding-bottom: 20px;">&nbsp;</p>

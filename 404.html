@@ -29,7 +29,7 @@ permalink: /404.html
 		.bgimg-1 {
 			background-position: center;
 			background-size: cover;
-			background-image: url("pexels-photo-257904.jpeg");
+			background-image: url("darkSaber.jpg");
 			min-height: 100%;
 		}
 		.w3-bar .w3-button {
@@ -37,17 +37,17 @@ permalink: /404.html
 		}
 	</style>
 </head>
-<body>
+<body bgcolor="black">
 	<!-- Navbar (sit on top) -->
 	<div class="w3-top">
-		<div class="w3-bar w3-white w3-card" id="myNavbar">
-			<a href="index.html" class="w3-bar-item w3-button" id="btnHome"><i class="fa fa-home"></i><div class="w3-hide-small" style="display: inline"> HOME</div></a>
+		<div class="w3-bar w3-black w3-card" id="myNavbar">
+			<a href="index.html" class="w3-bar-item w3-button w3-hover-dark-gray" id="btnHome"><i class="fa fa-home fa-inverse"></i><div class="w3-hide-small w3-text-white" style="display: inline"> HOME</div></a>
 			<!-- Right-sided navbar links -->
 			<div class="w3-right">
-				<a onclick="submitURL(document.getElementById('urlInput').value);" class="w3-bar-item w3-button" id="btnSearch"><i class="fa fa-search"></i><div class="w3-hide-small" style="display: inline"> SEARCH</div></a>
+				<a onclick="submitURL(document.getElementById('urlInput').value);" class="w3-bar-item w3-button w3-hover-dark-gray" id="btnSearch"><i class="fa fa-search fa-inverse"></i><div class="w3-hide-small w3-text-white" style="display: inline"> SEARCH</div></a>
 			</div>
 			<div class="w3-right" style="padding-top:6px; width:35%; min-width:210px">
-				<input type="text" name="playlisturl" onkeydown="enterURL(this);" class="w3-input w3-border w3-round" placeholder="Playlist URL" id="urlInput">
+				<input type="text" name="playlisturl" onkeydown="enterURL(this);" class="w3-input w3-round w3-light-grey" placeholder="Playlist URL" id="urlInput">
 			</div>
 		</div>
 	</div>

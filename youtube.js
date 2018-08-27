@@ -6,6 +6,7 @@ var songsLoadNum = 0;
 var songsLoaded = 0;
 var songsEnabled = 0;
 var songsDownloaded = 0;
+var songsToDownload = 0;
 var songsRequested = 0;
 
 window.onload = function() {
@@ -64,14 +65,16 @@ function getPlaylistHTML() {
 							songsLoadNum = parseInt(resourceJSON['sidebar']['playlistSidebarRenderer']['items'][0]['playlistSidebarPrimaryInfoRenderer']['stats'][0]['simpleText'].split(' ')[0]) - 1;
 							playlistName = resourceJSON['microformat']['microformatDataRenderer']['title'];
 							playlistOwner = resourceJSON['sidebar']['playlistSidebarRenderer']['items'][1]['playlistSidebarSecondaryInfoRenderer']['videoOwner']['videoOwnerRenderer']['title']['runs'][0]['text'];
-							document.getElementById('playlistInfo').innerText = 'Playlist - "' + playlistName + '" Owner - "' + playlistOwner + '"';
+							document.getElementById('songsInfo').innerText = 'Songs Loaded - ' + songsLoaded + '/' + songsLoadNum;
+							document.getElementById('playlistInfo').innerText = 'Playlist - "' + playlistName + '" Owner - "' + playlistOwner + '"';
 						} else if (resourceJSON['contents'].hasOwnProperty('singleColumnBrowseResultsRenderer')) {
 							videoID = resourceJSON['contents']['singleColumnBrowseResultsRenderer']['tabs'][0]['tabRenderer']['content']['sectionListRenderer']['contents'][0]['itemSectionRenderer']['contents'][0]['playlistVideoListRenderer']['contents'][0]['playlistVideoRenderer']['videoId'];
 							playlistID = resourceJSON['responseContext']['serviceTrackingParams'][0]['params'][0]['value'];
 							songsLoadNum = parseInt(resourceJSON['header']['playlistHeaderRenderer']['stats'][0]['runs'][0]['text'].split(' ')[0]) - 1;
 							playlistName = resourceJSON['header']['playlistHeaderRenderer']['title']['runs'][0]['text'];
 							playlistOwner = resourceJSON['header']['playlistHeaderRenderer']['ownerText']['runs'][0]['text'];
-							document.getElementById('playlistInfo').innerText = 'Playlist - "' + playlistName + '" Owner - "' + playlistOwner + '"';
+							document.getElementById('songsInfo').innerText = 'Songs Loaded - ' + songsLoaded + '/' + songsLoadNum;
+							document.getElementById('playlistInfo').innerText = 'Playlist - "' + playlistName + '" Owner - "' + playlistOwner + '"';
 						}
 						playlistID = playlistID.slice(2, playlistID.length);
 						getVideoHTML('https://www.youtube.com/watch?v=' + videoID + '&list=' + playlistID);
@@ -285,6 +288,7 @@ function displaySong(beatsaverHTML, songName, songArtist) {
 	}
 	updateDownloads();
 	songsLoaded += 1;
+	document.getElementById('songsInfo').innerText = 'Songs Loaded - ' + songsLoaded + '/' + songsLoadNum;
 	if (songsLoaded >= songsLoadNum) {
 		document.getElementById('btnDownloadAll').disabled = false;
 		document.getElementById('btnDownloadBeatDrop').disabled = false;
@@ -328,13 +332,27 @@ function downloadAll() {
 		}
 	}
 	alert('Download Started - Compiling may take a few minutes...');
+	songsToDownload = 0;
 	songsDownloaded = 0;
 	var table = document.getElementById('songTable');
 	for (arrRow in table.rows) {
 		if (arrRow != 0) {
-			var myRow = table.rows[arrRow];
+			var bsSongID = '';
 			try {
-				var mySelect = myRow.cells[2].getElementsByTagName('select')[0];
+				bsSongID = table.rows[arrRow].cells[3].innerText;
+			} catch (err) {}
+			if (bsSongID != 'N/A') {
+				songsToDownload += 1;
+			}
+		}
+	}
+	document.getElementById('downloadInfo').innerText = 'Songs Downloaded - ' + songsDownloaded + '/' + songsToDownload;
+	for (arrRow in table.rows) {
+		if (arrRow != 0) {
+			var myRow = table.rows[arrRow];
+			var mySelect = null;
+			try {
+				mySelect = myRow.cells[2].getElementsByTagName('select')[0];
 			} catch (err) {}
 			var bsSongID = mySelect.options[mySelect.selectedIndex].value;
 			if (bsSongID != '[No Song]') {
@@ -353,6 +371,7 @@ function downloadSong(bsSongID) {
 		var arrBuff = xhr.response;
 		playlistZip.file(bsSongID + '.zip', arrBuff);
 		songsDownloaded += 1;
+		document.getElementById('downloadInfo').innerText = 'Songs Downloaded - ' + songsDownloaded + '/' + songsToDownload;
 		if (songsDownloaded >= songsEnabled) {
 			playlistZip.generateAsync({type:'blob'}).then(function (blob) {
 				saveAs(blob, playlistName.replace(/[^a-zA-Z0-9]/g, '').trim() + '.zip');
@@ -365,6 +384,7 @@ function downloadSong(bsSongID) {
 						} catch (err) {}
 					}
 				}
+				document.getElementById('downloadInfo').innerText = 'Songs Downloaded - Not Downloading';
 			}, function (err) {
 				console.log(err);
 			});
@@ -377,6 +397,16 @@ function downloadSong(bsSongID) {
 }
 
 function downloadBeatDrop() {
+	document.getElementById('btnDownloadAll').disabled = true;
+	document.getElementById('btnDownloadBeatDrop').disabled = true;
+	for (rowID in document.getElementById('songTable').rows) {
+		if (rowID != 0) {
+			try {
+				document.getElementById('songTable').rows[rowID].cells[2].getElementsByTagName('select')[0].disabled = true;
+			} catch (err) {}
+		}
+	}
+	document.getElementById('downloadInfo').innerText = 'Songs Downloaded - 0/1';
 	var beatDropJSON = JSON.parse("{}");
 	beatDropJSON['playlistTitle'] = playlistName;
 	beatDropJSON['playlistAuthor'] = playlistOwner;
@@ -404,4 +434,15 @@ function downloadBeatDrop() {
 	document.body.appendChild(myFile);
 	myFile.click();
 	document.body.removeChild(myFile);
+	document.getElementById('downloadInfo').innerText = 'Songs Downloaded - 1/1';
+	document.getElementById('btnDownloadAll').disabled = false;
+	document.getElementById('btnDownloadBeatDrop').disabled = false;
+	for (rowID in document.getElementById('songTable').rows) {
+		if (rowID != 0) {
+			try {
+				document.getElementById('songTable').rows[rowID].cells[2].getElementsByTagName('select')[0].disabled = false;
+			} catch (err) {}
+		}
+	}
+	document.getElementById('downloadInfo').innerText = 'Songs Downloaded - Not Downloading';
 }
