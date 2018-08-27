@@ -2,6 +2,7 @@ var playlisturl = '';
 var playlistName = '';
 var playlistOwner = '';
 var playlistZip = new JSZip();
+var songsLoadNum = 0;
 var songsLoaded = 0;
 var songsEnabled = 0;
 var songsDownloaded = 0;
@@ -60,12 +61,14 @@ function getPlaylistHTML() {
 						if (resourceJSON['contents'].hasOwnProperty('twoColumnBrowseResultsRenderer')) {
 							videoID = resourceJSON['contents']['twoColumnBrowseResultsRenderer']['tabs'][0]['tabRenderer']['content']['sectionListRenderer']['contents'][0]['itemSectionRenderer']['contents'][0]['playlistVideoListRenderer']['contents'][0]['playlistVideoRenderer']['videoId'];
 							playlistID = resourceJSON['responseContext']['serviceTrackingParams'][1]['params'][0]['value'];
+							songsLoadNum = parseInt(resourceJSON['sidebar']['playlistSidebarRenderer']['items'][0]['playlistSidebarPrimaryInfoRenderer']['stats'][0]['simpleText'].split(' ')[0]) - 1;
 							playlistName = resourceJSON['microformat']['microformatDataRenderer']['title'];
 							playlistOwner = resourceJSON['sidebar']['playlistSidebarRenderer']['items'][1]['playlistSidebarSecondaryInfoRenderer']['videoOwner']['videoOwnerRenderer']['title']['runs'][0]['text'];
 							document.getElementById('playlistInfo').innerText = 'Playlist - "' + playlistName + '" Owner - "' + playlistOwner + '"';
 						} else if (resourceJSON['contents'].hasOwnProperty('singleColumnBrowseResultsRenderer')) {
 							videoID = resourceJSON['contents']['singleColumnBrowseResultsRenderer']['tabs'][0]['tabRenderer']['content']['sectionListRenderer']['contents'][0]['itemSectionRenderer']['contents'][0]['playlistVideoListRenderer']['contents'][0]['playlistVideoRenderer']['videoId'];
 							playlistID = resourceJSON['responseContext']['serviceTrackingParams'][0]['params'][0]['value'];
+							songsLoadNum = parseInt(resourceJSON['header']['playlistHeaderRenderer']['stats'][0]['runs'][0]['text'].split(' ')[0]) - 1;
 							playlistName = resourceJSON['header']['playlistHeaderRenderer']['title']['runs'][0]['text'];
 							playlistOwner = resourceJSON['header']['playlistHeaderRenderer']['ownerText']['runs'][0]['text'];
 							document.getElementById('playlistInfo').innerText = 'Playlist - "' + playlistName + '" Owner - "' + playlistOwner + '"';
@@ -171,7 +174,9 @@ function getSongs(sourceHTML) {
 				songNames.push(mySongName);
 				songArtists.push(myArtistName);
 			}
-		} catch (err) {}
+		} catch (err) {
+			songsLoadNum -= 1;
+		}
 	}
 	for (song in songNames) {
 		if (songNames[song].includes('feat.')) {
@@ -280,6 +285,10 @@ function displaySong(beatsaverHTML, songName, songArtist) {
 	}
 	updateDownloads();
 	songsLoaded += 1;
+	if (songsLoaded >= songsLoadNum) {
+		document.getElementById('btnDownloadAll').disabled = false;
+		document.getElementById('btnDownloadBeatDrop').disabled = false;
+	}
 }
 	
 function updateDownloads() {
