@@ -167,7 +167,7 @@ function getSongs(sourceText, loggedIn, offset, myURL) {
 			filtSong = filtSong.slice(0, filtSong.indexOf('/'));
 		}
 		filtSong = filtSong.replace(/[^a-z0-9 ]/g, '');
-		getBeatsaverHTML(filtSong, songNames[song], songArtists[song]);
+		getBeatsaverHTML(filtSong, songNames[song], songArtists[song], true);
 	}
 	if (loggedIn == true && offset == 0 && songsListNum > songsLoadNum) {
 		for (x = 1; x < Math.ceil(songsListNum / 100); x++) {
@@ -176,23 +176,29 @@ function getSongs(sourceText, loggedIn, offset, myURL) {
 	}
 }
 
-function getBeatsaverHTML(filtSong, songName, songArtist) {
+function getBeatsaverHTML(filtSong, songName, songArtist, firstRun) {
 	var htmlFile = new XMLHttpRequest();
-	htmlFile.open('GET', 'https://cors.io/?https://www.beatsaver.com/search/all/' + encodeURIComponent(filtSong), true);
+	var searchName = '';
+	if (firstRun) {
+		searchName = (filtSong + ' ' + songArtist).toLowerCase();
+	} else {
+		searchName = filtSong;
+	}
+	htmlFile.open('GET', 'https://cors.io/?https://www.beatsaver.com/search/all/' + encodeURIComponent(searchName), true);
 	htmlFile.onreadystatechange = function() {
 		if (htmlFile.readyState === 4) {  // Makes sure the document is ready to parse.
 			if (htmlFile.status === 200) {  // Makes sure it's found the file.
 				var allText = htmlFile.responseText;
-				displaySong(allText, songName, songArtist);
+				displaySong(allText, songName, songArtist, filtSong, firstRun);
 			} else {
-				getBeatsaverHTML(filtSong, songName, songArtist);
+				getBeatsaverHTML(filtSong, songName, songArtist, firstRun);
 			}
 		}
 	};
 	htmlFile.send(null);
 }
 
-function displaySong(beatsaverHTML, songName, songArtist) {
+function displaySong(beatsaverHTML, songName, songArtist, filtSong, firstRun) {
 	var table = document.getElementById('songTable');
 	var row = table.insertRow(songsLoaded + 1);
 	var songCell = row.insertCell(0);
@@ -223,17 +229,23 @@ function displaySong(beatsaverHTML, songName, songArtist) {
 			var thirdIndex = beatsaverHTML.slice(parseInt(thisIndex) + parseInt(secondIndex) + 6, beatsaverHTML.length).indexOf('</h2></a>');
 			bsSongName = beatsaverHTML.slice(parseInt(thisIndex) + parseInt(secondIndex) + 6, parseInt(thisIndex) + parseInt(secondIndex) + 6 + parseInt(thirdIndex));
 			if (defaultSet) {
-			beatsaverCellHTML += '<option value="';
+				beatsaverCellHTML += '<option value="';
 			} else {
-			beatsaverCellHTML += '<option selected="selected" value="';
-			defaultSet = true;
+				beatsaverCellHTML += '<option selected="selected" value="';
+				defaultSet = true;
 			}
 			beatsaverCellHTML += bsSongID + '">' + bsSongName + '</option>';
 		}
 		beatsaverCellHTML += '</select>';
 		beatsaverCell.innerHTML = beatsaverCellHTML;
 	} else {
-		beatsaverCell.innerHTML = '<select style="width: 100%;"><option selected="selected" value="[No Song]">[No Song]</option></select>';
+		if (firstRun) {
+			table.deleteRow(row.rowIndex);
+			getBeatsaverHTML(filtSong, songName, songArtist, false);
+			return false;
+		} else {
+			beatsaverCell.innerHTML = '<select style="width: 100%;"><option selected="selected" value="[No Song]">[No Song]</option></select>';
+		}
 	}
 	updateDownloads();
 	songsLoaded += 1;
