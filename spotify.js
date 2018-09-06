@@ -307,7 +307,7 @@ function downloadAll() {
 			try {
 				bsSongID = table.rows[arrRow].cells[3].innerText;
 			} catch (err) {}
-			if (bsSongID != 'N/A') {
+			if (bsSongID != 'N/A' && bsSongID != '') {
 				songsToDownload += 1;
 			}
 		}
