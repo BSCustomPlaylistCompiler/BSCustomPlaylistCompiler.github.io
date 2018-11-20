@@ -295,7 +295,7 @@ function displaySong(beatsaverHTML, songName, songArtist, filtSong, firstRun) {
 		var bsSongName = '';
 		for (arrIndex in strIndices) {
 			var thisIndex = strIndices[arrIndex];
-			var secondIndex = beatsaverHTML.slice(parseInt(thisIndex), beatsaverHTML.length).indexOf('"');
+			var secondIndex = beatsaverHTML.slice(parseInt(thisIndex), beatsaverHTML.length).indexOf('">');
 			bsSongID = beatsaverHTML.slice(parseInt(thisIndex), parseInt(thisIndex) + parseInt(secondIndex));
 			if (bsSongID.includes('ail/')) {
 				bsSongID = bsSongID.slice(4, bsSongID.length);
@@ -303,8 +303,8 @@ function displaySong(beatsaverHTML, songName, songArtist, filtSong, firstRun) {
 			if (bsSongID.includes('etail/')) {
 				bsSongID = bsSongID.slice(6, bsSongID.length);
 			}
-			var thirdIndex = beatsaverHTML.slice(parseInt(thisIndex) + parseInt(secondIndex) + 6, beatsaverHTML.length).indexOf('</h2></a>');
-			bsSongName = beatsaverHTML.slice(parseInt(thisIndex) + parseInt(secondIndex) + 6, parseInt(thisIndex) + parseInt(secondIndex) + 6 + parseInt(thirdIndex));
+			var thirdIndex = beatsaverHTML.slice(parseInt(thisIndex) + parseInt(secondIndex) + 6, beatsaverHTML.length).indexOf('</a>');
+			bsSongName = beatsaverHTML.slice(parseInt(thisIndex) + parseInt(secondIndex) + 2, parseInt(thisIndex) + parseInt(secondIndex) + 6 + parseInt(thirdIndex));
 			if (defaultSet) {
 				beatsaverCellHTML += '<option value="';
 			} else {
