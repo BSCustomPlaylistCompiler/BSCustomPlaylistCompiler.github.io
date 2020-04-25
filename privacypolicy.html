@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="author" content="Alec Coates">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="Beat Saber Custom Playlist Compiler">
+	<meta name="keywords" content="Beat Saber, Beat  Saver, VR, Playlist">
+	<title>Beat Saber Custom Playlist Compiler</title>
+	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=A07eBjalvo">
+	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=A07eBjalvo">
+	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=A07eBjalvo">
+	<link rel="manifest" href="/site.webmanifest?v=A07eBjalvo">
+	<link rel="mask-icon" href="/safari-pinned-tab.svg?v=A07eBjalvo" color="#5bbad5">
+	<link rel="shortcut icon" href="/favicon.ico?v=A07eBjalvo">
+	<meta name="msapplication-TileColor" content="#372cad">
+	<meta name="theme-color" content="#ffffff">
+	<script type="text/javascript" src="index.js"></script>
+	<link rel="stylesheet" href="w3.css">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<style>
+		body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", sans-serif}
+		body, html {
+			height: 100%;
+			line-height: 1.8;
+		}
+		.bgimg-1 {
+			background-position: center;
+			background-size: cover;
+			min-height: 100%;
+		}
+		.w3-bar .w3-button {
+			padding: 16px;
+		}
+	</style>
+</head>
+<body bgcolor="black">
+	<!-- Navbar (sit on top) -->
+	<div class="w3-top">
+		<div class="w3-bar w3-black w3-card" id="myNavbar">
+			<a href="index.html" class="w3-bar-item w3-button w3-hover-dark-gray id="btnHome"><i class="fa fa-home fa-inverse"></i><div class="w3-hide-small w3-text-white" style="display: inline"> HOME</div></a>
+			<!-- Right-sided navbar links -->
+			<div class="w3-right">
+				<a onclick="submitURL(document.getElementById('urlInput').value);" class="w3-bar-item w3-button w3-hover-dark-gray" id="btnSearch"><i class="fa fa-search fa-inverse"></i><div class="w3-hide-small w3-text-white" style="display: inline"> SEARCH</div></a>
+			</div>
+			<div class="w3-right" style="padding-top:6px; width:35%; min-width:210px">
+				<input type="text" name="playlisturl" onkeydown="enterURL(this);" class="w3-input w3-round w3-light-grey" placeholder="Playlist URL" id="urlInput">
+			</div>
+		</div>
+	</div>
+
+	<!-- Header with full-height image -->
+	<header class="bgimg-1 w3-display-container w3-grayscale-min" id="home">
+		<div class="w3-display-left w3-text-white" style="padding:6%">
+			<span style="text-shadow:2px 2px 0 rgba(10, 10, 10, 1)"><h1>Privacy Policy</h1><br></span>
+			<span style="text-shadow:1px 1px 0 rgba(10, 10, 10, 1)">No personal data is collected or stored on your local machine or any external sites/servers.<br></span>
+			<span style="text-shadow:1px 1px 0 rgba(10, 10, 10, 1)">Personal data is only used to create lists of songs from playlists and is then discarded.<br></span>
+			<span style="text-shadow:1px 1px 0 rgba(10, 10, 10, 1)">External account login/authentification is only required for API access (read-only) - which is necessary as this is a static site (Only running client-side code).<br></span>
+		</div>
+	</header>
+</body>
+</html>
