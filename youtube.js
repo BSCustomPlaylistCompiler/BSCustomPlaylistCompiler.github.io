@@ -43,7 +43,8 @@ function getPlaylistHTML() {
 	var myURL = getURL()
 	if (myURL.includes('list=')) {
 		if (new URL(myURL).searchParams.get('list').toString().startsWith('PL')) {
-			htmlFile.open('GET', 'https://cors.io/?' + myURL, true);
+			htmlFile.setRequestHeader('Origin', 'https://bscustomplaylistcompiler.github.io/')
+			htmlFile.open('GET', 'https://cors-anywhere.herokuapp.com/' + myURL, true);
 			htmlFile.onreadystatechange = function() {
 				if (htmlFile.readyState === 4) {  // Makes sure the document is ready to parse.
 					if (htmlFile.status === 200) {  // Makes sure it's found the file.
