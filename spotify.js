@@ -185,7 +185,8 @@ function getBeatsaverHTML(filtSong, songName, songArtist, firstRun) {
 	} else {
 		searchName = filtSong;
 	}
-	htmlFile.open('GET', 'https://cors.io/?https://www.beatsaver.com/search/all?key=' + encodeURIComponent(searchName), true);
+	htmlFile.setRequestHeader('Origin', 'https://bscustomplaylistcompiler.github.io/')
+	htmlFile.open('GET', 'https://cors-anywhere.herokuapp.com/https://www.beatsaver.com/search/all?key=' + encodeURIComponent(searchName), true);
 	htmlFile.onreadystatechange = function() {
 		if (htmlFile.readyState === 4) {  // Makes sure the document is ready to parse.
 			if (htmlFile.status === 200) {  // Makes sure it's found the file.
