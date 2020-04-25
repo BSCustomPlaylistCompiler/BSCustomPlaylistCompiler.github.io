@@ -43,8 +43,8 @@ function getPlaylistHTML() {
 	var myURL = getURL()
 	if (myURL.includes('list=')) {
 		if (new URL(myURL).searchParams.get('list').toString().startsWith('PL')) {
-			htmlFile.setRequestHeader('Origin', 'https://bscustomplaylistcompiler.github.io/')
 			htmlFile.open('GET', 'https://cors-anywhere.herokuapp.com/' + myURL, true);
+			htmlFile.setRequestHeader('Origin', 'https://bscustomplaylistcompiler.github.io/')
 			htmlFile.onreadystatechange = function() {
 				if (htmlFile.readyState === 4) {  // Makes sure the document is ready to parse.
 					if (htmlFile.status === 200) {  // Makes sure it's found the file.
@@ -95,8 +95,8 @@ function getPlaylistHTML() {
 
 function getVideoHTML(videoURL) {
 	var htmlFile = new XMLHttpRequest();
-	htmlFile.setRequestHeader('Origin', 'https://bscustomplaylistcompiler.github.io/')
 	htmlFile.open('GET', 'https://cors-anywhere.herokuapp.com/' + videoURL, true);
+	htmlFile.setRequestHeader('Origin', 'https://bscustomplaylistcompiler.github.io/')
 	htmlFile.onreadystatechange = function() {
 		if (htmlFile.readyState === 4) {  // Makes sure the document is ready to parse.
 			if (htmlFile.status === 200) {  // Makes sure it's found the file.
@@ -263,8 +263,8 @@ function getBeatsaverHTML(filtSong, songName, songArtist, firstRun) {
 	} else {
 		searchName = filtSong;
 	}
-	htmlFile.setRequestHeader('Origin', 'https://bscustomplaylistcompiler.github.io/')
 	htmlFile.open('GET', 'https://cors-anywhere.herokuapp.com/https://www.beatsaver.com/search/all?key=' + encodeURIComponent(searchName), true);
+	htmlFile.setRequestHeader('Origin', 'https://bscustomplaylistcompiler.github.io/')
 	htmlFile.onreadystatechange = function() {
 		if (htmlFile.readyState === 4) {  // Makes sure the document is ready to parse.
 			if (htmlFile.status === 200) {  // Makes sure it's found the file.
